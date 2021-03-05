@@ -2,7 +2,7 @@
 
 namespace DataHandler
 {
-    public class 
+    public class Initialize 
     {
         
     }

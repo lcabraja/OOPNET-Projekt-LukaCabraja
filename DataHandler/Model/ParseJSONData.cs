@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataHandler
+namespace DataHandler.Model
 {
-    interface IData
+    class ParseJSONData
     {
-        public 
+
     }
 }

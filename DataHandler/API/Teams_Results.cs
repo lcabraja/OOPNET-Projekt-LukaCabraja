@@ -6,9 +6,6 @@ namespace DataHandler
 {
     partial class API
     {
-        class Teams_Results
-        {
-
-        }
+        
     }
 }
