@@ -2,38 +2,64 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace ConsoleOut
 {
     static class ConsolePrinter
     {
-        public static void PrettyPrint(string caller, string line, ConsoleColor Key, ConsoleColor value, string lineprefix = "\t")
+        public static void PrettyPrint(string caller, string line, ConsoleColor key = ConsoleColor.Blue, ConsoleColor value = ConsoleColor.Magenta, ConsoleColor foreground = ConsoleColor.White, string lineprefix = "\t")
         {
-            Console.WriteLine($"{ caller} {{");
+            Console.ForegroundColor = foreground;
+            Console.WriteLine($"\n{caller} {{");
+            List<string> lines = line.Split(", ").ToList();
+            int maxlen = 0;
+            lines.ForEach(x => LongestMember(x.Split(": ")[0] + ':', ref maxlen));
+            maxlen = (int)Math.Ceiling((float)maxlen / 8.0);
+            lines.ForEach(x => {
+                if (x.Split(": ").Length < 2)
+                    return;
+                Console.ForegroundColor = key;
+                Console.Write($"{lineprefix}{x.Split(": ")[0]}:{new string('\t', maxlen - (int)Math.Floor((float)(x.Split(": ")[0].Length + 1) / 8.0))}");
+                Console.ForegroundColor = value;
+                Console.WriteLine(x.Split(": ")[1]);
+                });
+            Console.ForegroundColor = foreground;
+            Console.WriteLine("}");
+            Console.ResetColor();
+        }
 
-        }
-        private static void LinePrint(string? prefix, string line, string? postfix = null)
+        public static void LinePrint(string content, string prefix = "\t", string postfix = null)
+            => Console.WriteLine($"{prefix}{content}{postfix}");
+
+        public static void BR()
         {
-            Console.WriteLine(prefix + line + postfix);
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine(new string('■', Console.WindowWidth));
+            Console.ResetColor();
         }
+        private static void LongestMember(string member, ref int maxlen)
+        {
+            if (member.Length > maxlen)
+                maxlen = member.Length;
+        }
+
         public static void COut(this Team item)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(item);
+            PrettyPrint("Team", item.ToString(), foreground: ConsoleColor.Red);
             Console.ResetColor();
         }
         public static void COut(this Result item)
         {
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(item);
+            PrettyPrint("Result", item.ToString(), foreground: ConsoleColor.Yellow);
             Console.ResetColor();
         }
         public static void COut(this GroupResult item)
         {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine(item);
-            Console.ForegroundColor = ConsoleColor.Green;
-            item.OrderedTeams.ForEach(Console.WriteLine);
+            PrettyPrint("GroupResult", item.ToString(), foreground: ConsoleColor.DarkYellow);
+            item.OrderedTeams.ForEach(x => PrettyPrint("OrderedTeam", x.ToString(), foreground: ConsoleColor.DarkYellow));
             Console.ResetColor();
         }
 
@@ -41,31 +67,24 @@ namespace ConsoleOut
         {
             if (item == null)
                 return;
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.WriteLine(item);
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            PrettyPrint("Match", item.ToString(), foreground: ConsoleColor.Cyan);
             
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("Officials {");
             Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.Write("Officials {");
-            item.Officials.ForEach(x => LinePrint("\t", x));
-            Console.Write("}");
-            
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write("HomeTeamEvents: ");
-            item.HomeTeamEvents.ForEach(x => LinePrint("\t", x.ToString()));
-            Console.Write("}");
+            item.Officials.ForEach(x => LinePrint(x));
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine('}');
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("AwayTeamEvents: ");
-            item.AwayTeamEvents.ForEach(x => LinePrint("\t", x.ToString()));
-            Console.Write("}");
-
-            Console.ForegroundColor = ConsoleColor.DarkGreen;
-            Console.Write("HomeTeamStatistics: ");
-            Console.WriteLine(item.HomeTeamStatistics);
             
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write("AwayTeamStatistics: ");
-            Console.WriteLine(item.AwayTeamStatistics);
+            item.HomeTeamEvents.ForEach(x => PrettyPrint("HomeTeamEvents", x.ToString(), foreground: ConsoleColor.Cyan));
+
+            item.AwayTeamEvents.ForEach(x => PrettyPrint("AwayTeamEvents", x.ToString(), foreground: ConsoleColor.Cyan));
+
+            PrettyPrint("HomeTeamStatistics", item.ToString(), foreground: ConsoleColor.Cyan);
+
+            PrettyPrint("AwayTeamStatistics", item.ToString(), foreground: ConsoleColor.Cyan);
 
             Console.ResetColor();
         }

@@ -4,7 +4,7 @@
 //
 //    using DataHandler.Model;
 //
-//    var teams = Teams.FromJson(jsonString);
+//    var team = Team.FromJson(jsonString);
 
 namespace DataHandler.Model
 {

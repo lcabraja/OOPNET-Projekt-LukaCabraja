@@ -6,7 +6,7 @@ namespace DataHandler.Model
 {
     public partial class Team
     {
-        public static readonly string PrimaryURL = "https://worldcup.sfg.io/teams";
+        public static readonly string PrimaryURL = "http://worldcup.sfg.io/teams";
     }
     public partial class Result
     {

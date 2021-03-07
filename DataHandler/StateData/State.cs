@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DataHandler
+namespace DataHandler.StateData
 {
-    interface IData
+    class State
     {
-        public string GetJsonStringData();
     }
 }
