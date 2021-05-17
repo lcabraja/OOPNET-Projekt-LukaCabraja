@@ -12,24 +12,20 @@ namespace DataHandler.DataSources
         public string Filepath { get; }
         public JsonFromFile(string filepath) => Filepath = filepath;
 
+        public async Task<string> GetJsonStringDataAsync()
+        {
+            using (StreamReader sr = new StreamReader(Filepath))
+            {
+                return await sr.ReadToEndAsync();
+            }
+        }
         public string GetJsonStringData()
         {
-            throw new NotImplementedException();
+            using (StreamReader sr = new StreamReader(Filepath))
+            {
+                return sr.ReadToEnd();
+            }
         }
-        // public async Task<string> GetJsonStringData()
-        //{
-        //    using (StreamReader reader = new StreamReader(Filepath))
-        //    {
-        //        var lines = await reader.ReadToEnd();
-        //        return lines;
-        //    }
-        //}
-        //public string GetJsonStringData()
-        //{
-        //    using (StreamReader reader = new StreamReader(Filepath))
-        //    {
-        //        return reader.ReadToEnd();
-        //    }
-        //}
     }
+}
 }
