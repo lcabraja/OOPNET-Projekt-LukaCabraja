@@ -17,7 +17,7 @@ namespace ConsoleOut
         public static List<T> JSONGet<T> (string url)
             where T : Schema
             //What to do with .Schema, remove it? because it isn't doing anything, I just want it to make sure that i only deserialize into my model classes
-            //The main issue is being unable to inherit static methods
+            //The issue stems from my static architecture being uninheritable
         {
             var client = new RestClient(url);
             var response = client.Execute(new RestRequest());
@@ -30,8 +30,10 @@ namespace ConsoleOut
         static void Main(string[] args)
         {
             //JsonFromFile("");
-            JsonFromFile output = new JsonFromFile();
-            string bonjourno = output.GetJsonStringData(@"C:\Users\doss\source\repos\OOPNET-Projekt-LukaCabraja\DataHandler\JSON\men\group_results.json");
+            //JsonFromFile output = new JsonFromFile();
+            //string bonjourno = output.GetJsonSt
+            //ringData(@"C:\Users\doss\source\repos\OOPNET-Projekt-LukaCabraja\DataHandler\JSON\men\group_results.json");
+            BeginExecution();
         }
         static void BeginExecution()
         {
@@ -61,19 +63,19 @@ namespace ConsoleOut
                 switch (input.ToLower())
                 {
                     case "team":
-                        Console.WriteLine($"Match.Count == {teams.Count}");
+                        Console.WriteLine($"Team.Count == {teams.Count}");
                         Console.Write($"Enter number between {0} and {teams.Count - 1}: ");
                         int.TryParse(Console.ReadLine(), out int index1);
                         teams[index1].COut();
                         break;
                     case "result":
-                        Console.WriteLine($"Match.Count == {results.Count}");
+                        Console.WriteLine($"Result.Count == {results.Count}");
                         Console.Write($"Enter number between {0} and {results.Count - 1}: ");
                         int.TryParse(Console.ReadLine(), out int index2);
                         results[index2].COut();
                         break;
                     case "groupresult":
-                        Console.WriteLine($"Match.Count == {groupresults.Count}");
+                        Console.WriteLine($"GroupResult.Count == {groupresults.Count}");
                         Console.Write($"Enter number between {0} and {groupresults.Count - 1}: ");
                         int.TryParse(Console.ReadLine(), out int index3);
                         groupresults[index3].COut();

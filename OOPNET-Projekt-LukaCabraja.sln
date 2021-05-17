@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataHandler", "DataHandler\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleOut", "ConsoleOut\ConsoleOut.csproj", "{B1295D43-12E6-4A37-8139-5B7CB34A8BB6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WinFormsInterface", "WinFormsInterface\WinFormsInterface.csproj", "{118A66B1-6919-4B32-ABA8-686EC4B0E3B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsInterface", "WinFormsInterface\WinFormsInterface.csproj", "{118A66B1-6919-4B32-ABA8-686EC4B0E3B6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
