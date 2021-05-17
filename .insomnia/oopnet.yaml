@@ -1,0 +1,191 @@
+_type: export
+__export_format: 4
+__export_date: 2021-05-17T18:52:10.906Z
+__export_source: insomnia.desktop.app:v2021.3.0
+resources:
+  - _id: req_2d193f63e4db418ca5d48bb08b2a7819
+    parentId: wrk_25b65990ff3b432ba8b23b7b9a1031be
+    modified: 1621276428222
+    created: 1621276369991
+    url: https://world-cup-json-2018.herokuapp.com/teams/results
+    name: m teams results
+    description: >-
+      ### Svjetsko prvenstvo za muške
+
+      - Sadrže osnovne informacije o svakoj reprezentaciji (FIFA kod, broj pobjeda/poraza, ...)
+
+      - Sadrži FIFA kod koji je potreban za dohvaćanje detalja o pojedinoj reprezentaciji
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1621276138203
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: wrk_25b65990ff3b432ba8b23b7b9a1031be
+    parentId: null
+    modified: 1621276102948
+    created: 1621276102948
+    name: OOP.NET
+    description: ""
+    scope: collection
+    _type: workspace
+  - _id: req_525f39af0a4e4529a62ee339c7aaf6d2
+    parentId: wrk_25b65990ff3b432ba8b23b7b9a1031be
+    modified: 1621276410780
+    created: 1621276138153
+    url: https://worldcup.sfg.io/teams/results
+    name: f teams results
+    description: >-
+      ### Svjetsko prvenstvo za žene
+
+      - Sadrže osnovne informacije o svakoj reprezentaciji (FIFA kod, broj pobjeda/poraza, ...)
+
+      - Sadrži FIFA kod koji je potreban za dohvaćanje detalja o pojedinoj reprezentaciji
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1621276138153
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_98bf6dc498d54654acf11cb23a39430a
+    parentId: wrk_25b65990ff3b432ba8b23b7b9a1031be
+    modified: 1621276525566
+    created: 1621276477468
+    url: https://world-cup-json-2018.herokuapp.com/matches
+    name: m matches
+    description: |-
+      ### Svjetsko prvenstvo za muške
+      - koriste se za dohvaćanja detaljnih informacija o svim utakmicama
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1621276138103
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_b6e0f73334c04450bedc1e6cfe582635
+    parentId: wrk_25b65990ff3b432ba8b23b7b9a1031be
+    modified: 1621276467639
+    created: 1621276153007
+    url: https://worldcup.sfg.io/matches
+    name: f matches
+    description: |-
+      ### Svjetsko prvenstvo za žene
+      - koriste se za dohvaćanja detaljnih informacija o svim utakmicama
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1621276138053
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_625a278be11c487f9d9d039a0298d17c
+    parentId: wrk_25b65990ff3b432ba8b23b7b9a1031be
+    modified: 1621276682521
+    created: 1621276618731
+    url: https://world-cup-json-2018.herokuapp.com/matches/country
+    name: m country
+    description: |-
+      ### Svjetsko prvenstvo za muške
+      - Primjeri dohvaćanja filtriranih detaljnih informacija o utakmicama
+    method: GET
+    body: {}
+    parameters:
+      - name: fifa_code
+        value: ENG
+        description: ""
+        id: pair_19d1ead92fca4fef808a6d432b4d8696
+    headers: []
+    authentication: {}
+    metaSortKey: -1621276138028
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_58a37a55e16247c4890cc3d3a0f007b4
+    parentId: wrk_25b65990ff3b432ba8b23b7b9a1031be
+    modified: 1621276607711
+    created: 1621276168473
+    url: https://worldcup.sfg.io/matches/country
+    name: f country
+    description: |-
+      ### Svjetsko prvenstvo za žene
+      - Primjeri dohvaćanja filtriranih detaljnih informacija o utakmicama
+    method: GET
+    body: {}
+    parameters:
+      - name: fifa_code
+        value: ENG
+        description: ""
+        id: pair_19d1ead92fca4fef808a6d432b4d8696
+    headers: []
+    authentication: {}
+    metaSortKey: -1621276138003
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_b51f3e20f2564a59e6c5437d771e0c3e25d7b052
+    parentId: wrk_25b65990ff3b432ba8b23b7b9a1031be
+    modified: 1621276103104
+    created: 1621276103104
+    name: Base Environment
+    data: {}
+    dataPropertyOrder: null
+    color: null
+    isPrivate: false
+    metaSortKey: 1621276103104
+    _type: environment
+  - _id: jar_b51f3e20f2564a59e6c5437d771e0c3e25d7b052
+    parentId: wrk_25b65990ff3b432ba8b23b7b9a1031be
+    modified: 1621276103108
+    created: 1621276103108
+    name: Default Jar
+    cookies: []
+    _type: cookie_jar
+  - _id: spc_34f90b67bc7a4b4481615c567b796eb2
+    parentId: wrk_25b65990ff3b432ba8b23b7b9a1031be
+    modified: 1621276102952
+    created: 1621276102952
+    fileName: OOP.NET
+    contents: ""
+    contentType: yaml
+    _type: api_spec
