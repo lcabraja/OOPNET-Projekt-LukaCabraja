@@ -46,10 +46,10 @@ namespace ConsoleOut
         }
         static object DefaultPull(out IList<Team> teams, out IList<Result> results, out IList<GroupResult> groupresults, out IList<Match> matches)
         {
-            teams = Download.JSONGet<Team>(Team.PrimaryURL);
-            results = Download.JSONGet<Result>(Result.PrimaryURL);
-            groupresults = Download.JSONGet<GroupResult>(GroupResult.PrimaryURL);
-            matches = Download.JSONGet<Match>(Match.PrimaryURL);
+            teams = Download.JSONGet<Team>(Team.F_URL);
+            results = Download.JSONGet<Result>(Result.F_URL);
+            groupresults = Download.JSONGet<GroupResult>(GroupResult.F_URL);
+            matches = Download.JSONGet<Match>(Match.F_URL);
             return new { teams, results, groupresults, matches };
         }
 
