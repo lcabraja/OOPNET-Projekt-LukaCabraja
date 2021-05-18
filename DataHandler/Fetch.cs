@@ -10,9 +10,15 @@ namespace DataHandler
 {
     public static class Fetch
     {
+        public const bool verifySSL = false;
         public static T FetchJsonFromUrl<T>(string resourceUrl)
         {
+            Console.WriteLine(resourceUrl);
             var client = new RestClient(resourceUrl);
+            if (!verifySSL)
+            {
+                client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+            }
             var res = client.Execute(new RestRequest()).Content;
             T data = JsonConvert.DeserializeObject<T>(res);
             return data;
@@ -20,7 +26,11 @@ namespace DataHandler
         public static async Task<T> FetchJsonFromUrlAsync<T>(string resourceUrl)
         {
             var client = new RestClient(resourceUrl);
-            var res = await client.ExecuteAsync(new RestRequest());
+            if (!verifySSL)
+            {
+                client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+            }
+            var res = await client.ExecuteAsync(new RestRequest(Method.GET));
             T data = JsonConvert.DeserializeObject<T>(res.Content);
             return data;
         }

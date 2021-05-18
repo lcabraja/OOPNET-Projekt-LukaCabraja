@@ -21,12 +21,22 @@ namespace WinFormsInterface
             
         }
 
-        private async void Onboarding_Load(object sender, EventArgs e)
+        private void Onboarding_Load(object sender, EventArgs e)
         {
-            //var client = new RestClient(Team.PrimaryURL);
-            //var response = client.Execute(new RestRequest());
-            List<TeamResult> teams = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(TeamResult.F_URL);
-            cbTeamSelector.DataSource = teams.Select(x => x.Country);
+            //var url = URL.Teams(URL.F_BASE_URL);
+            //var client = new RestClient(url);
+            //client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+            //var req = new RestRequest(Method.GET);
+            //var res = client.Execute(req);
+            //Console.WriteLine(res);
+
+
+            //return;
+            _ = Task.Run(async () =>
+            {
+                List<TeamResult> teams = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(TeamResult.F_URL);
+                cbTeamSelector.DataSource = teams.Select(x => x.Country);
+            });
         }
     }
 }
