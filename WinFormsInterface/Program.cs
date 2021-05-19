@@ -1,3 +1,4 @@
+using DataHandler;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,8 @@ namespace WinFormsInterface
 {
     static class Program
     {
+        private const string DIR = "user.json";
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -16,7 +19,22 @@ namespace WinFormsInterface
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+           
             Application.Run(new Onboarding());
+            
+        }
+
+        private static bool userOnboarded()
+        {
+            try
+            {
+                UserSettings userSettings = Fetch.FetchJsonFromFile<UserSettings>(DIR);
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
         }
     }
 }

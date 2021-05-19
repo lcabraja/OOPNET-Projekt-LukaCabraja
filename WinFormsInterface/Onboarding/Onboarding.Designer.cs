@@ -29,17 +29,9 @@ namespace WinFormsInterface
         /// </summary>
         private void InitializeComponent()
         {
-            this.cbTeamSelector = new System.Windows.Forms.ComboBox();
             this.lbFavoriteTeam = new System.Windows.Forms.Label();
+            this.tcWizard = new System.Windows.Forms.TabControl();
             this.SuspendLayout();
-            // 
-            // cbTeamSelector
-            // 
-            this.cbTeamSelector.FormattingEnabled = true;
-            this.cbTeamSelector.Location = new System.Drawing.Point(12, 80);
-            this.cbTeamSelector.Name = "cbTeamSelector";
-            this.cbTeamSelector.Size = new System.Drawing.Size(121, 23);
-            this.cbTeamSelector.TabIndex = 0;
             // 
             // lbFavoriteTeam
             // 
@@ -49,15 +41,29 @@ namespace WinFormsInterface
             this.lbFavoriteTeam.Size = new System.Drawing.Size(0, 15);
             this.lbFavoriteTeam.TabIndex = 1;
             // 
+            // tcWizard
+            // 
+            this.tcWizard.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tcWizard.Location = new System.Drawing.Point(0, 0);
+            this.tcWizard.Name = "tcWizard";
+            this.tcWizard.SelectedIndex = 0;
+            this.tcWizard.Size = new System.Drawing.Size(304, 171);
+            this.tcWizard.TabIndex = 2;
+            this.tcWizard.Selected += new System.Windows.Forms.TabControlEventHandler(this.tcWizard_Selected);
+            // 
             // Onboarding
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(304, 171);
+            this.Controls.Add(this.tcWizard);
             this.Controls.Add(this.lbFavoriteTeam);
-            this.Controls.Add(this.cbTeamSelector);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(320, 210);
             this.Name = "Onboarding";
-            this.Text = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Onboarding";
             this.Load += new System.EventHandler(this.Onboarding_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -65,9 +71,8 @@ namespace WinFormsInterface
         }
 
         #endregion
-
-        private System.Windows.Forms.ComboBox cbTeamSelector;
         private System.Windows.Forms.Label lbFavoriteTeam;
+        private System.Windows.Forms.TabControl tcWizard;
     }
 }
 

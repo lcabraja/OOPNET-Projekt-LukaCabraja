@@ -9,4 +9,19 @@
     <PackageReference Include="RestSharp" Version="106.11.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="JSON Examples\men\group_results.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="JSON Examples\men\matches.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="JSON Examples\men\results.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="JSON Examples\men\teams.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
