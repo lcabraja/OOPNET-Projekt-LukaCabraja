@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,12 +21,6 @@ namespace WinFormsInterface
         public Onboarding()
         {
             InitializeComponent();
-            InitializeWizard();
-        }
-
-        private void InitializeWizard()
-        {
-            
         }
 
         //private Action doNextStep;
@@ -37,29 +32,30 @@ namespace WinFormsInterface
 
         public void nextStep(/*Action next*/)
         {
-            results[tcWizard.SelectedIndex] = 
-                tcWizard.TabPages[tcWizard.SelectedIndex].Controls.OfType<IHasIntProperty>()
-                .ToList()[tcWizard.SelectedIndex].ReturnValue();
-            if (tcWizard.SelectedIndex == tcWizard.TabCount - 1) {
+            var page = tcWizard.TabPages[tcWizard.SelectedIndex].Controls.OfType<IHasIntProperty>().First();
+            var newValue = page.ReturnValue();
+            results[tcWizard.SelectedIndex] = newValue;
+            if (tcWizard.SelectedIndex == tcWizard.TabCount - 1)
+            {
                 finishOnboarding();
                 return;
             }
-            MessageBox.Show(tcWizard.SelectedIndex.ToString());
-            MessageBox.Show(((tcWizard.SelectedIndex + 1 <= tcWizard.TabCount) ?
-                             tcWizard.SelectedIndex + 1 : tcWizard.SelectedIndex).ToString());
             tcWizard.SelectedIndex = (tcWizard.SelectedIndex + 1 <= tcWizard.TabCount) ?
                              tcWizard.SelectedIndex + 1 : tcWizard.SelectedIndex;
         }
 
         private void finishOnboarding()
         {
-            //var leag = (UserSettings.League)results[0];
-            //var lang = (UserSettings.Language)results[1];
-            var b4 = new UserSettings(results[0], results[1]).ToString();
-            var inbetween = JsonConvert.DeserializeObject<UserSettings>(b4);
-            var after = inbetween.ToString();
-            MessageBox.Show($"{b4}\n{inbetween}\n{after}");
+            var user = new UserSettings(results[0], results[1]).ToString();
+            try
+            {
+                File.WriteAllText(Program.DIR, user.ToString());
+            }
+            catch (Exception ex)
+            {
 
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private async void Onboarding_Load(object sender, EventArgs e)
@@ -76,9 +72,15 @@ namespace WinFormsInterface
             results = new Dictionary<int, int>();
         }
 
-        private void tcWizard_Selected(object sender, TabControlEventArgs e)
+        private void tcWizard_Deselecting(object sender, TabControlCancelEventArgs e)
         {
-            
+            if (-1 == tcWizard.TabPages[tcWizard.SelectedIndex].Controls
+                              .OfType<IHasIntProperty>()
+                              .First()
+                              .ReturnValue())
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

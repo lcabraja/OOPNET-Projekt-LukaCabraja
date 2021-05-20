@@ -40,7 +40,7 @@ namespace WinFormsInterface
             this.btContinue.Name = "btContinue";
             this.btContinue.Size = new System.Drawing.Size(75, 23);
             this.btContinue.TabIndex = 5;
-            this.btContinue.Text = "Dalje";
+            this.btContinue.Text = "Zavrsi";
             this.btContinue.UseVisualStyleBackColor = true;
             this.btContinue.Click += new System.EventHandler(this.btContinue_Click);
             // 
@@ -75,6 +75,7 @@ namespace WinFormsInterface
             this.Controls.Add(this.rbEnglish);
             this.Name = "LanguageChooser";
             this.Size = new System.Drawing.Size(300, 150);
+            this.Load += new System.EventHandler(this.LanguageChooser_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

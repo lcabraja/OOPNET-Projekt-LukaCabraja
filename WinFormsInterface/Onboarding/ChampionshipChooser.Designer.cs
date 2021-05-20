@@ -75,6 +75,7 @@ namespace WinFormsInterface
             this.Controls.Add(this.rbFemale);
             this.Name = "ChampionshipChooser";
             this.Size = new System.Drawing.Size(300, 150);
+            this.Load += new System.EventHandler(this.ChampionshipChooser_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

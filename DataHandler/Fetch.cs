@@ -38,12 +38,14 @@ namespace DataHandler
         {
             var sr = new StreamReader(resoruceUri);
             var iobuffer = sr.ReadToEnd();
+            sr.Close();
             return JsonConvert.DeserializeObject<T>(iobuffer);
         }
         public static async Task<T> FetchJsonFromFileAsync<T>(string resoruceUri)
         {
             var sr = new StreamReader(resoruceUri);
             var iobuffer = await sr.ReadToEndAsync();
+            sr.Close();
             return JsonConvert.DeserializeObject<T>(iobuffer);
         }
     }

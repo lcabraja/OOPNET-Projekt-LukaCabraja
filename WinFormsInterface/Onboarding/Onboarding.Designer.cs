@@ -49,7 +49,7 @@ namespace WinFormsInterface
             this.tcWizard.SelectedIndex = 0;
             this.tcWizard.Size = new System.Drawing.Size(304, 171);
             this.tcWizard.TabIndex = 2;
-            this.tcWizard.Selected += new System.Windows.Forms.TabControlEventHandler(this.tcWizard_Selected);
+            this.tcWizard.Deselecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tcWizard_Deselecting);
             // 
             // Onboarding
             // 

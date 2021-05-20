@@ -8,7 +8,7 @@ namespace WinFormsInterface
 {
     static class Program
     {
-        private const string DIR = "user.json";
+        public const string DIR = "user.json";
 
         /// <summary>
         ///  The main entry point for the application.
@@ -19,8 +19,11 @@ namespace WinFormsInterface
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-           
-            Application.Run(new Onboarding());
+
+            if (!userOnboarded())
+            {
+                Application.Run(new Onboarding()); 
+            }
             
         }
 
