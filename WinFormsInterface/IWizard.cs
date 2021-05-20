@@ -6,6 +6,6 @@ namespace WinFormsInterface
 {
     interface IWizard
     {
-        public void nextStep(/*Action nextStep*/);
+        public void nextStep();
     }
 }

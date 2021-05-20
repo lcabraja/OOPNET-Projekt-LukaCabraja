@@ -1,6 +1,8 @@
 using DataHandler;
+using DataHandler.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -8,7 +10,11 @@ namespace WinFormsInterface
 {
     static class Program
     {
-        public const string DIR = "user.json";
+        public const string BASE_DIR = "savedata";
+        public static string USER { get { return BASE_DIR + "/user.json"; } }
+        public static string REPRESENTATION { get { return BASE_DIR + "/rep.json"; } }
+        public static UserSettings userSettings { get; set; }
+        public static TeamResult lastTeam { get; set; }
 
         /// <summary>
         ///  The main entry point for the application.
@@ -19,22 +25,46 @@ namespace WinFormsInterface
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
+            PreparePaths();
             if (!userOnboarded())
             {
-                Application.Run(new Onboarding()); 
+                Application.Run(new Onboarding());
             }
-            
+            tryFifa_code();
+            Application.Run(new FavoriteRepresentation());
+        }
+
+        private static void tryFifa_code()
+        {
+            try
+            {
+                lastTeam = Fetch.FetchJsonFromFile<TeamResult>(REPRESENTATION);
+            } catch
+            {
+                lastTeam = null;
+            }
+        }
+
+        private static void PreparePaths()
+        {
+            try
+            {
+                Directory.CreateDirectory(BASE_DIR);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Could not create save folder.");
+            }
         }
 
         private static bool userOnboarded()
         {
             try
             {
-                UserSettings userSettings = Fetch.FetchJsonFromFile<UserSettings>(DIR);
+                userSettings = Fetch.FetchJsonFromFile<UserSettings>(USER);
                 return true;
             }
-            catch 
+            catch
             {
                 return false;
             }

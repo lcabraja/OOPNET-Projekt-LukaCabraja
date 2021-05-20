@@ -14,7 +14,6 @@ namespace DataHandler.Model
         public static string F_URL { get { return URL.F_BASE_URL + ENDPOINT; } }
         public static string M_URL { get { return URL.M_BASE_URL + ENDPOINT; } }
 
-
         [JsonProperty("id")]
         public long Id { get; set; }
 
@@ -56,6 +55,22 @@ namespace DataHandler.Model
 
         [JsonProperty("goal_differential")]
         public long GoalDifferential { get; set; }
+        public string SerializeObject { get; private set; }
 
+        public override bool Equals(object obj)
+        {
+            return obj is TeamResult result &&
+                   FifaCode == result.FifaCode;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(FifaCode);
+        }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

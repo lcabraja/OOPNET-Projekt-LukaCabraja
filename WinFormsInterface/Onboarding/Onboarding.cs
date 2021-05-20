@@ -23,14 +23,9 @@ namespace WinFormsInterface
             InitializeComponent();
         }
 
-        //private Action doNextStep;
-        private int currentStep = 0;
-        UserSettings us;
-
-        private UserSettings newUserSettings;
         private IDictionary<int, int> results;
 
-        public void nextStep(/*Action next*/)
+        public void nextStep()
         {
             var page = tcWizard.TabPages[tcWizard.SelectedIndex].Controls.OfType<IHasIntProperty>().First();
             var newValue = page.ReturnValue();
@@ -46,16 +41,18 @@ namespace WinFormsInterface
 
         private void finishOnboarding()
         {
-            var user = new UserSettings(results[0], results[1]).ToString();
+            var user = new UserSettings(results[0], results[1]);
+            Program.userSettings = user;
             try
             {
-                File.WriteAllText(Program.DIR, user.ToString());
+                File.WriteAllText(Program.USER, user.ToString());
             }
             catch (Exception ex)
             {
-
                 MessageBox.Show(ex.Message);
             }
+            this.Close();
+            //Application.Run(new FavoriteRepresentation());
         }
 
         private async void Onboarding_Load(object sender, EventArgs e)
