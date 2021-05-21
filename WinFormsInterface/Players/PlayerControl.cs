@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -33,12 +34,12 @@ namespace WinFormsInterface
         }
         public PlayerControl(DataHandler.Model.Player playerData, Image playerPortrait) : this(playerData)
         {
-            this.playerPortrait.Image = playerPortrait;
+            this.pbPlayerPortrait.Image = playerPortrait;
         }
 
         public void SetPlayerImage(Image playerPortrait)
         {
-            this.playerPortrait.Image = playerPortrait;
+            this.pbPlayerPortrait.Image = playerPortrait;
         }
 
         private string SplitName()
@@ -91,6 +92,26 @@ namespace WinFormsInterface
             parentForm.departedFrom = this.Parent as FlowLayoutPanel;
             SetSelectionStatus(true);
             parentForm.MoveSelectedControls();
+        }
+        private void tsAddPicture_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog fileDialog = new OpenFileDialog())
+            {
+                var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                var downloads = home + "\\Downloads";
+                fileDialog.InitialDirectory = downloads;
+                fileDialog.Filter = "PNG files (*.png)|*.png|JPEG files (*.jpg, *jpeg)|*.jp*g|All files (*.*)|*.*";
+                fileDialog.FilterIndex = 1;
+                fileDialog.RestoreDirectory = true;
+
+                if(fileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    var filePath = fileDialog.FileName;
+                    var fileStream = fileDialog.OpenFile();
+                    pbPlayerPortrait.Image = Image.FromFile(filePath);
+                }
+
+            }
         }
     }
 }
