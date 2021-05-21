@@ -112,6 +112,7 @@ namespace DataHandler.Model
         public long Id { get; set; }
 
         [JsonProperty("type_of_event")]
+        [JsonConverter(typeof(TypeOfEventConverter))]
         public TypeOfEvent TypeOfEvent { get; set; }
 
         [JsonProperty("player")]
@@ -138,6 +139,9 @@ namespace DataHandler.Model
         [JsonProperty("blocked")]
         public long Blocked { get; set; }
 
+        [JsonProperty("woodwork")]
+        public long Woodwork { get; set; }
+
         [JsonProperty("corners")]
         public long Corners { get; set; }
 
@@ -159,6 +163,9 @@ namespace DataHandler.Model
         [JsonProperty("distance_covered")]
         public long DistanceCovered { get; set; }
 
+        [JsonProperty("balls_recovered")]
+        public long BallsRecovered { get; set; }
+
         [JsonProperty("tackles")]
         public long Tackles { get; set; }
 
@@ -172,19 +179,19 @@ namespace DataHandler.Model
         public long RedCards { get; set; }
 
         [JsonProperty("fouls_committed")]
-        public long FoulsCommitted { get; set; }
+        public long? FoulsCommitted { get; set; }
 
         [JsonProperty("tactics")]
-        public Tactics Tactics { get; set; }
+        public string Tactics { get; set; }
 
         [JsonProperty("starting_eleven")]
-        public List<StartingEleven> StartingEleven { get; set; }
+        public List<Player> StartingEleven { get; set; }
 
         [JsonProperty("substitutes")]
-        public List<StartingEleven> Substitutes { get; set; }
+        public List<Player> Substitutes { get; set; }
     }
 
-    public partial class StartingEleven
+    public partial class Player
     {
         [JsonProperty("name")]
         public string Name { get; set; }
@@ -197,6 +204,8 @@ namespace DataHandler.Model
 
         [JsonProperty("position")]
         public Position Position { get; set; }
+        [JsonIgnore]
+        public bool Favorite { get; set; }
     }
 
     public partial class Weather
@@ -225,8 +234,6 @@ namespace DataHandler.Model
 
     public enum Position { Defender, Forward, Goalie, Midfield };
 
-    public enum Tactics { The433, The442, The451 };
-
     internal static class Converter
     {
         public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
@@ -237,7 +244,6 @@ namespace DataHandler.Model
             {
                 TypeOfEventConverter.Singleton,
                 PositionConverter.Singleton,
-                TacticsConverter.Singleton,
                 new IsoDateTimeConverter { DateTimeStyles = DateTimeStyles.AssumeUniversal }
             },
         };
@@ -384,51 +390,5 @@ namespace DataHandler.Model
         }
 
         public static readonly PositionConverter Singleton = new PositionConverter();
-    }
-
-    internal class TacticsConverter : JsonConverter
-    {
-        public override bool CanConvert(Type t) => t == typeof(Tactics) || t == typeof(Tactics?);
-
-        public override object ReadJson(JsonReader reader, Type t, object existingValue, JsonSerializer serializer)
-        {
-            if (reader.TokenType == JsonToken.Null) return null;
-            var value = serializer.Deserialize<string>(reader);
-            switch (value)
-            {
-                case "4-3-3":
-                    return Tactics.The433;
-                case "4-4-2":
-                    return Tactics.The442;
-                case "4-5-1":
-                    return Tactics.The451;
-            }
-            throw new Exception("Cannot unmarshal type Tactics");
-        }
-
-        public override void WriteJson(JsonWriter writer, object untypedValue, JsonSerializer serializer)
-        {
-            if (untypedValue == null)
-            {
-                serializer.Serialize(writer, null);
-                return;
-            }
-            var value = (Tactics)untypedValue;
-            switch (value)
-            {
-                case Tactics.The433:
-                    serializer.Serialize(writer, "4-3-3");
-                    return;
-                case Tactics.The442:
-                    serializer.Serialize(writer, "4-4-2");
-                    return;
-                case Tactics.The451:
-                    serializer.Serialize(writer, "4-5-1");
-                    return;
-            }
-            throw new Exception("Cannot marshal type Tactics");
-        }
-
-        public static readonly TacticsConverter Singleton = new TacticsConverter();
     }
 }

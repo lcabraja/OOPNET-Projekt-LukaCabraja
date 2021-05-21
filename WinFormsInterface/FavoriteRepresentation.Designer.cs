@@ -57,9 +57,9 @@ namespace WinFormsInterface
             this.lbTooltip.AutoSize = true;
             this.lbTooltip.Location = new System.Drawing.Point(13, 43);
             this.lbTooltip.Name = "lbTooltip";
-            this.lbTooltip.Size = new System.Drawing.Size(38, 15);
+            this.lbTooltip.Size = new System.Drawing.Size(140, 15);
             this.lbTooltip.TabIndex = 2;
-            this.lbTooltip.Text = "label1";
+            this.lbTooltip.Text = "Connection interrupted...";
             this.lbTooltip.Click += new System.EventHandler(this.lbTooltip_Click);
             // 
             // FavoriteRepresentation

@@ -24,7 +24,8 @@ namespace WinFormsInterface
         {
             lbTooltip.Text = "Fetching...";
             var representations =
-                await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(GenderedRepresentation()));
+                await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>
+                    (URL.Teams(Program.userSettings.GenderedRepresentation()));
             teams = representations;
             cbRepresentation.DataSource = representations.Select(x => $"{x.Country} ({x.FifaCode})")
                                                          .ToList();
@@ -35,19 +36,6 @@ namespace WinFormsInterface
             {
                 cbRepresentation.SelectedItem = 
                     $"{Program.lastTeam.Country} ({Program.lastTeam.FifaCode})";
-            }
-        }
-
-        private string GenderedRepresentation()
-        {
-            switch (Program.userSettings.SavedLeague)
-            {
-                case UserSettings.League.Female:
-                    return URL.F_BASE_URL;
-                case UserSettings.League.Male:
-                    return URL.M_BASE_URL;
-                default:
-                    throw new Exception("Unsupported league selected");
             }
         }
 

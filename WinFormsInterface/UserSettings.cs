@@ -1,20 +1,19 @@
-﻿using Newtonsoft.Json;
+﻿using DataHandler.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace WinFormsInterface
 {
-    class UserSettings
+    public class UserSettings
     {
         public League SavedLeague { get; set; }
         public Language SavedLanguage { get; set; }
 
         public UserSettings(int savedLeague, int savedLanguage)
         {
-            Console.WriteLine($"{savedLeague}, {savedLanguage}");
             SavedLeague = (League)savedLeague;
-            Console.WriteLine($"{SavedLeague}, {SavedLanguage}");
             SavedLanguage = (Language)savedLanguage;
         }
 
@@ -28,6 +27,18 @@ namespace WinFormsInterface
         {
             English = 0,
             Croatian = 1
+        }
+        public string GenderedRepresentation()
+        {
+            switch (SavedLeague)
+            {
+                case League.Female:
+                    return URL.F_BASE_URL;
+                case League.Male:
+                    return URL.M_BASE_URL;
+                default:
+                    throw new Exception("Unsupported league selected");
+            }
         }
         public override string ToString()
         {

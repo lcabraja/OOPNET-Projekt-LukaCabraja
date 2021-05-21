@@ -61,11 +61,12 @@ namespace WinFormsInterface.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to testval.
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static string Testname {
+        internal static System.Drawing.Bitmap defaultpicture {
             get {
-                return ResourceManager.GetString("Testname", resourceCulture);
+                object obj = ResourceManager.GetObject("defaultpicture", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }
