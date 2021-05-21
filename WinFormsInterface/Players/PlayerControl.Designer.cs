@@ -35,7 +35,7 @@ namespace WinFormsInterface
             this.cbIsCaptain = new System.Windows.Forms.CheckBox();
             this.pnIconPanel = new System.Windows.Forms.Panel();
             this.cbSelected = new System.Windows.Forms.CheckBox();
-            this.playerPortrait = new System.Windows.Forms.PictureBox();
+            this.pbPlayerPortrait = new System.Windows.Forms.PictureBox();
             this.lbFavorite = new System.Windows.Forms.Label();
             this.cmMove = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsMoveTo = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,7 +43,7 @@ namespace WinFormsInterface
             this.tsToOther = new System.Windows.Forms.ToolStripMenuItem();
             this.tsAddPicture = new System.Windows.Forms.ToolStripMenuItem();
             this.pnIconPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.playerPortrait)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbPlayerPortrait)).BeginInit();
             this.cmMove.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -82,7 +82,7 @@ namespace WinFormsInterface
             // pnIconPanel
             // 
             this.pnIconPanel.Controls.Add(this.cbSelected);
-            this.pnIconPanel.Controls.Add(this.playerPortrait);
+            this.pnIconPanel.Controls.Add(this.pbPlayerPortrait);
             this.pnIconPanel.Location = new System.Drawing.Point(0, 0);
             this.pnIconPanel.Margin = new System.Windows.Forms.Padding(0);
             this.pnIconPanel.MaximumSize = new System.Drawing.Size(100, 100);
@@ -101,20 +101,20 @@ namespace WinFormsInterface
             this.cbSelected.UseVisualStyleBackColor = true;
             this.cbSelected.CheckedChanged += new System.EventHandler(this.cbSelected_CheckedChanged);
             // 
-            // playerPortrait
+            // pbPlayerPortrait
             // 
-            this.playerPortrait.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.playerPortrait.ErrorImage = null;
-            this.playerPortrait.Image = global::WinFormsInterface.Properties.Resources.defaultpicture;
-            this.playerPortrait.InitialImage = null;
-            this.playerPortrait.Location = new System.Drawing.Point(0, 0);
-            this.playerPortrait.MaximumSize = new System.Drawing.Size(100, 100);
-            this.playerPortrait.MinimumSize = new System.Drawing.Size(100, 100);
-            this.playerPortrait.Name = "playerPortrait";
-            this.playerPortrait.Size = new System.Drawing.Size(100, 100);
-            this.playerPortrait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.playerPortrait.TabIndex = 0;
-            this.playerPortrait.TabStop = false;
+            this.pbPlayerPortrait.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbPlayerPortrait.ErrorImage = null;
+            this.pbPlayerPortrait.Image = global::WinFormsInterface.Properties.Resources.defaultpicture;
+            this.pbPlayerPortrait.InitialImage = null;
+            this.pbPlayerPortrait.Location = new System.Drawing.Point(0, 0);
+            this.pbPlayerPortrait.MaximumSize = new System.Drawing.Size(100, 100);
+            this.pbPlayerPortrait.MinimumSize = new System.Drawing.Size(100, 100);
+            this.pbPlayerPortrait.Name = "pbPlayerPortrait";
+            this.pbPlayerPortrait.Size = new System.Drawing.Size(100, 100);
+            this.pbPlayerPortrait.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbPlayerPortrait.TabIndex = 0;
+            this.pbPlayerPortrait.TabStop = false;
             // 
             // lbFavorite
             // 
@@ -162,6 +162,7 @@ namespace WinFormsInterface
             this.tsAddPicture.Name = "tsAddPicture";
             this.tsAddPicture.Size = new System.Drawing.Size(132, 22);
             this.tsAddPicture.Text = "Dodaj sliku";
+            this.tsAddPicture.Click += new System.EventHandler(this.tsAddPicture_Click);
             // 
             // PlayerControl
             // 
@@ -178,7 +179,7 @@ namespace WinFormsInterface
             this.Size = new System.Drawing.Size(98, 168);
             this.pnIconPanel.ResumeLayout(false);
             this.pnIconPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.playerPortrait)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbPlayerPortrait)).EndInit();
             this.cmMove.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -190,7 +191,7 @@ namespace WinFormsInterface
         private System.Windows.Forms.Label lbNumber;
         private System.Windows.Forms.CheckBox cbIsCaptain;
         private System.Windows.Forms.Panel pnIconPanel;
-        private System.Windows.Forms.PictureBox playerPortrait;
+        private System.Windows.Forms.PictureBox pbPlayerPortrait;
         private System.Windows.Forms.Label lbFavorite;
         private System.Windows.Forms.CheckBox cbSelected;
         private System.Windows.Forms.ContextMenuStrip cmMove;
