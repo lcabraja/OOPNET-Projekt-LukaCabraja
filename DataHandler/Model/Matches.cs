@@ -58,7 +58,7 @@ namespace DataHandler.Model
         public string AwayTeamCountry { get; set; }
 
         [JsonProperty("datetime")]
-        public DateTimeOffset Datetime { get; set; }
+        public DateTimeOffset? Datetime { get; set; }
 
         [JsonProperty("winner")]
         public string Winner { get; set; }
@@ -85,10 +85,10 @@ namespace DataHandler.Model
         public TeamStatistics AwayTeamStatistics { get; set; }
 
         [JsonProperty("last_event_update_at")]
-        public DateTimeOffset LastEventUpdateAt { get; set; }
+        public DateTimeOffset? LastEventUpdateAt { get; set; }
 
         [JsonProperty("last_score_update_at")]
-        public DateTimeOffset LastScoreUpdateAt { get; set; }
+        public DateTimeOffset? LastScoreUpdateAt { get; set; }
     }
 
     public partial class Team
@@ -230,7 +230,7 @@ namespace DataHandler.Model
         public string Description { get; set; }
     }
 
-    public enum TypeOfEvent { Goal, GoalPenalty, SubstitutionIn, SubstitutionOut, YellowCard, YellowCardSecond };
+    public enum TypeOfEvent { Goal, GoalOwn, GoalPenalty, SubstitutionIn, SubstitutionOut, YellowCard, YellowCardSecond, RedCard };
 
     public enum Position { Defender, Forward, Goalie, Midfield };
 
@@ -292,6 +292,8 @@ namespace DataHandler.Model
             {
                 case "goal":
                     return TypeOfEvent.Goal;
+                case "goal-own":
+                    return TypeOfEvent.GoalOwn;
                 case "goal-penalty":
                     return TypeOfEvent.GoalPenalty;
                 case "substitution-in":
@@ -302,6 +304,8 @@ namespace DataHandler.Model
                     return TypeOfEvent.YellowCard;
                 case "yellow-card-second":
                     return TypeOfEvent.YellowCardSecond;
+                case "red-card":
+                    return TypeOfEvent.RedCard;
             }
             throw new Exception("Cannot unmarshal type TypeOfEvent");
         }
@@ -319,6 +323,9 @@ namespace DataHandler.Model
                 case TypeOfEvent.Goal:
                     serializer.Serialize(writer, "goal");
                     return;
+                case TypeOfEvent.GoalOwn:
+                    serializer.Serialize(writer, "goal-own");
+                    return;
                 case TypeOfEvent.GoalPenalty:
                     serializer.Serialize(writer, "goal-penalty");
                     return;
@@ -333,6 +340,9 @@ namespace DataHandler.Model
                     return;
                 case TypeOfEvent.YellowCardSecond:
                     serializer.Serialize(writer, "yellow-card-second");
+                    return;
+                case TypeOfEvent.RedCard:
+                    serializer.Serialize(writer, "red-card");
                     return;
             }
             throw new Exception("Cannot marshal type TypeOfEvent");
