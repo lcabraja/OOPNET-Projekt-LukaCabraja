@@ -34,7 +34,10 @@ namespace WinFormsInterface
             this.tlPlayers = new System.Windows.Forms.TableLayoutPanel();
             this.flFavorites = new System.Windows.Forms.FlowLayoutPanel();
             this.flOtherPlayers = new System.Windows.Forms.FlowLayoutPanel();
+            this.tsMenuSettings = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMenuRankedList = new System.Windows.Forms.ToolStripMenuItem();
             this.tlMainDock.SuspendLayout();
+            this.msMenuBar.SuspendLayout();
             this.tlPlayers.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,6 +60,9 @@ namespace WinFormsInterface
             // msMenuBar
             // 
             this.msMenuBar.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.msMenuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsMenuSettings,
+            this.tsMenuRankedList});
             this.msMenuBar.Location = new System.Drawing.Point(0, 0);
             this.msMenuBar.Name = "msMenuBar";
             this.msMenuBar.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -106,6 +112,21 @@ namespace WinFormsInterface
             this.flOtherPlayers.DragDrop += new System.Windows.Forms.DragEventHandler(this.flowLayout_DragDrop);
             this.flOtherPlayers.DragOver += new System.Windows.Forms.DragEventHandler(this.flowLayout_DragOver);
             // 
+            // tsMenuSettings
+            // 
+            this.tsMenuSettings.Name = "tsMenuSettings";
+            this.tsMenuSettings.Size = new System.Drawing.Size(66, 36);
+            this.tsMenuSettings.Text = "Postavke";
+            this.tsMenuSettings.Click += tsMenuSettings_Click;
+
+            // 
+            // tsMenuRankedList
+            // 
+            this.tsMenuRankedList.Name = "tsMenuRankedList";
+            this.tsMenuRankedList.Size = new System.Drawing.Size(70, 36);
+            this.tsMenuRankedList.Text = "Rang lista";
+            this.tsMenuRankedList.Click += tsMenuRankedList_Click;
+            // 
             // FavoritePlayers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -120,6 +141,8 @@ namespace WinFormsInterface
             this.Load += new System.EventHandler(this.FavoritePlayers_Load);
             this.tlMainDock.ResumeLayout(false);
             this.tlMainDock.PerformLayout();
+            this.msMenuBar.ResumeLayout(false);
+            this.msMenuBar.PerformLayout();
             this.tlPlayers.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -132,5 +155,7 @@ namespace WinFormsInterface
         private System.Windows.Forms.TableLayoutPanel tlPlayers;
         internal System.Windows.Forms.FlowLayoutPanel flFavorites;
         internal System.Windows.Forms.FlowLayoutPanel flOtherPlayers;
+        private System.Windows.Forms.ToolStripMenuItem tsMenuSettings;
+        private System.Windows.Forms.ToolStripMenuItem tsMenuRankedList;
     }
 }

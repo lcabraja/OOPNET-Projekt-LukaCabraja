@@ -120,6 +120,11 @@ namespace WinFormsInterface
             return controls;
         }
 
+        private void ResetPanels()
+        {
+            flFavorites.BackColor = SystemColors.Control;
+            flOtherPlayers.BackColor = SystemColors.Control;
+        }
         private void flowLayout_DragDrop(object sender, DragEventArgs e)
         {
             FlowLayoutPanel flowLayoutPanel = sender as FlowLayoutPanel;
@@ -138,11 +143,13 @@ namespace WinFormsInterface
             ResetPanels();
             flowLayoutPanel.BackColor = SystemColors.ControlDark;
         }
-
-        private void ResetPanels()
+         private void tsMenuSettings_Click(object sender, EventArgs e)
         {
-            flFavorites.BackColor = SystemColors.Control;
-            flOtherPlayers.BackColor = SystemColors.Control;
+            
+        }
+         private void tsMenuRankedList_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }
