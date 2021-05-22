@@ -29,6 +29,10 @@ namespace WinFormsInterface
         {
             var page = tcWizard.TabPages[tcWizard.SelectedIndex].Controls.OfType<IHasIntProperty>().First();
             var newValue = page.ReturnValue();
+            if (newValue == -1)
+            {
+                return;
+            }
             results[tcWizard.SelectedIndex] = newValue;
             if (tcWizard.SelectedIndex == tcWizard.TabCount - 1)
             {
@@ -41,21 +45,48 @@ namespace WinFormsInterface
 
         private void finishOnboarding()
         {
-            var user = new UserSettings(results[0], results[1]);
-            Program.userSettings = user;
+            UserSettings user;
             try
             {
-                File.WriteAllText(Program.USER, user.ToString());
+                user = new UserSettings(results[0], results[1]);
+                Program.userSettings = user;
+                try
+                {
+                    File.WriteAllText(Program.USER, user.ToString());
+                }
+                catch (Exception)
+                {
+                    EndOnboarding();
+                }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message);
+                EndOnboarding();
             }
-            this.Close();
-            //Application.Run(new FavoriteRepresentation());
+            finally
+            {
+                this.Close();
+            }
         }
 
-        private async void Onboarding_Load(object sender, EventArgs e)
+        private static void EndOnboarding()
+        {
+            MessageBox.Show("Error during onboarding.");
+            try
+            {
+                File.Delete(Program.USER);
+            }
+            catch
+            {
+                MessageBox.Show("Please manually delete user.json", "User settings error.");
+            }
+            finally
+            {
+                Application.Exit();
+            }
+        }
+
+        private void Onboarding_Load(object sender, EventArgs e)
         {
             var tp = new TabPage();
             tp.Controls.Add(new ChampionshipChooser());
@@ -77,6 +108,18 @@ namespace WinFormsInterface
                               .ReturnValue())
             {
                 e.Cancel = true;
+            }
+        }
+        private void onboarding_KeyUp(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Escape:
+                    this.Close();
+                    break;
+                case Keys.Enter:
+                    nextStep();
+                    break;
             }
         }
     }

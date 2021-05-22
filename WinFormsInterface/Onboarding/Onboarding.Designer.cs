@@ -65,6 +65,7 @@ namespace WinFormsInterface
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Onboarding";
             this.Load += new System.EventHandler(this.Onboarding_Load);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.onboarding_KeyUp);
             this.ResumeLayout(false);
             this.PerformLayout();
 
