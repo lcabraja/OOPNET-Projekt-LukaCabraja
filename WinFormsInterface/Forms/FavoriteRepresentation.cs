@@ -94,8 +94,8 @@ namespace WinFormsInterface
             if (e.CloseReason == CloseReason.WindowsShutDown) return;
             if (keepAlive) return;
 
-            // Confirm user wants to close
-            Application.Exit();
+            // Application.Exit() did in fact not exit the application, only the form.
+            System.Environment.Exit(0);
         }
     }
 }
