@@ -60,7 +60,6 @@ namespace WinFormsInterface
             this.lbTooltip.Size = new System.Drawing.Size(140, 15);
             this.lbTooltip.TabIndex = 2;
             this.lbTooltip.Text = "Connection interrupted...";
-            this.lbTooltip.Click += new System.EventHandler(this.lbTooltip_Click);
             // 
             // FavoriteRepresentation
             // 

@@ -16,7 +16,9 @@ namespace WinFormsInterface
     public partial class FavoriteRepresentation : Form
     {
         private bool dataLoaded = false;
+        private bool keepAlive = false;
         private List<TeamResult> teams;
+
         public FavoriteRepresentation()
         {
             InitializeComponent();
@@ -67,6 +69,7 @@ namespace WinFormsInterface
                 try
                 {
                     File.WriteAllText(Program.REPRESENTATION, FindSelectedRepresentation());
+                    keepAlive = true;
                     this.Close();
                 }
                 catch (Exception ex)
@@ -84,9 +87,15 @@ namespace WinFormsInterface
             return teams.Find(x => x.FifaCode == fifa_code).ToString();
         }
 
-        private void lbTooltip_Click(object sender, EventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            base.OnFormClosing(e);
 
+            if (e.CloseReason == CloseReason.WindowsShutDown) return;
+            if (keepAlive) return;
+
+            // Confirm user wants to close
+            Application.Exit();
         }
     }
 }
