@@ -11,6 +11,8 @@ namespace WinFormsInterface
     static class Program
     {
         public const string BASE_DIR = "savedata";
+        internal static bool firstOnboarding = true;
+
         public static string USER { get { return BASE_DIR + "/user.json"; } }
         public static string REPRESENTATION { get { return BASE_DIR + "/rep.json"; } }
         public static string FEMALE_TEAMS { get { return BASE_DIR + "/f/"; } }
@@ -31,10 +33,15 @@ namespace WinFormsInterface
             if (!userOnboarded())
             {
                 Application.Run(new Onboarding());
+                firstOnboarding = false;
             }
             tryFifa_code();
             Application.Run(new FavoriteRepresentation());
             Application.Run(new FavoritePlayers());
+            //TODO: += new System.EventHandler(this.FavoriteRepresentation_Load); or just += this.FavoriteRepresentation_Load;
+            //TODO: ranked list, how?
+            //TODO: where do i save files?
+            //TODO: printing
         }
 
         private static void tryFifa_code()
