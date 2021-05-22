@@ -204,7 +204,7 @@ namespace DataHandler.Model
 
         [JsonProperty("position")]
         public Position Position { get; set; }
-        [JsonIgnore]
+        [JsonProperty(Required = Required.Default)]
         public bool Favorite { get; set; }
     }
 
