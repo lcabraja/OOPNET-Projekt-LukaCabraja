@@ -31,7 +31,7 @@ namespace WinFormsInterface
                 Application.Run(new Onboarding());
             }
             tryFifa_code();
-            //Application.Run(new FavoriteRepresentation());
+            Application.Run(new FavoriteRepresentation());
             Application.Run(new FavoritePlayers());
         }
 

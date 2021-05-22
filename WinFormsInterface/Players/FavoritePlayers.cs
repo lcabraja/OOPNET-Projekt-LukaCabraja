@@ -8,6 +8,7 @@ using System.Linq;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Newtonsoft.Json;
 
 namespace WinFormsInterface
 {
@@ -29,18 +30,36 @@ namespace WinFormsInterface
                 Program.userSettings.GenderedRepresentation(),
                 Program.lastTeam.FifaCode);
             //url = URL.Matches(Program.userSettings.GenderedRepresentation());
-            var matches = await Fetch.FetchJsonFromUrlAsync<List<DataHandler.Model.Match>>(url);
-            if (matches[0].HomeTeam.Code == Program.lastTeam.FifaCode)
+            try
             {
-                matches[0].HomeTeamStatistics.StartingEleven.ForEach(players.Add);
-                matches[0].HomeTeamStatistics.Substitutes.ForEach(players.Add);
+                var matches = await Fetch.FetchJsonFromUrlAsync<List<Match>>(url);
+                if (matches[0].HomeTeam.Code == Program.lastTeam.FifaCode)
+                {
+                    matches[0].HomeTeamStatistics.StartingEleven.ForEach(players.Add);
+                    matches[0].HomeTeamStatistics.Substitutes.ForEach(players.Add);
+                }
+                else if (matches[0].AwayTeam.Code == Program.lastTeam.FifaCode)
+                {
+                    matches[0].AwayTeamStatistics.StartingEleven.ForEach(players.Add);
+                    matches[0].AwayTeamStatistics.Substitutes.ForEach(players.Add);
+                }
+                players.ForEach(x => flOtherPlayers.Controls.Add(PlayerControlFactory(x)));
             }
-            else if (matches[0].AwayTeam.Code == Program.lastTeam.FifaCode)
+            catch (HttpStatusException ex)
             {
-                matches[0].AwayTeamStatistics.StartingEleven.ForEach(players.Add);
-                matches[0].AwayTeamStatistics.Substitutes.ForEach(players.Add);
+                MessageBox.Show(ex.Message, "Request Error");
+                Application.Exit();
             }
-            players.ForEach(x => flOtherPlayers.Controls.Add(PlayerControlFactory(x)));
+            catch (JsonException ex)
+            {
+                MessageBox.Show(ex.Message, "Json parser exception");
+                Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+                Application.Exit();
+            }
         }
 
         private Control PlayerControlFactory(Player playerData)
@@ -143,13 +162,13 @@ namespace WinFormsInterface
             ResetPanels();
             flowLayoutPanel.BackColor = SystemColors.ControlDark;
         }
-         private void tsMenuSettings_Click(object sender, EventArgs e)
+        private void tsMenuSettings_Click(object sender, EventArgs e)
         {
-            
+
         }
-         private void tsMenuRankedList_Click(object sender, EventArgs e)
+        private void tsMenuRankedList_Click(object sender, EventArgs e)
         {
-            
+
         }
     }
 }

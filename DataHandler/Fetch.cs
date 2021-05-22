@@ -19,8 +19,12 @@ namespace DataHandler
             {
                 client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
             }
-            var res = client.Execute(new RestRequest()).Content;
-            T data = JsonConvert.DeserializeObject<T>(res);
+            var res = client.Execute(new RestRequest());
+            if (res.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new HttpStatusException($"Bad request, HTTP response status code: {res.StatusCode}");
+            }
+            T data = JsonConvert.DeserializeObject<T>(res.Content);
             return data;
         }
         public static async Task<T> FetchJsonFromUrlAsync<T>(string resourceUrl)
@@ -31,6 +35,10 @@ namespace DataHandler
                 client.RemoteCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
             }
             var res = await client.ExecuteAsync(new RestRequest(Method.GET));
+            if (res.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                throw new HttpStatusException($"Bad request, HTTP response status code: {res.StatusCode}");
+            }
             T data = JsonConvert.DeserializeObject<T>(res.Content);
             return data;
         }

@@ -1,5 +1,6 @@
 ﻿using DataHandler;
 using DataHandler.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -23,14 +24,33 @@ namespace WinFormsInterface
         private async void FavoriteRepresentation_Load(object sender, EventArgs e)
         {
             lbTooltip.Text = "Fetching...";
-            var representations =
-                await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>
-                    (URL.Teams(Program.userSettings.GenderedRepresentation()));
-            teams = representations;
-            cbRepresentation.DataSource = representations.Select(x => $"{x.Country} ({x.FifaCode})")
-                                                         .ToList();
-            dataLoaded = true;
-            lbTooltip.Text = "Done.";
+            try
+            {
+                var representations =
+                        await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>
+                            (URL.Teams(Program.userSettings.GenderedRepresentation()));
+                teams = representations;
+                cbRepresentation.DataSource = representations.OrderBy(x => x.FifaCode)
+                                                             .Select(x => $"{x.Country} ({x.FifaCode})")
+                                                             .ToList();
+                dataLoaded = true;
+                lbTooltip.Text = "Done.";
+            }
+            catch (HttpStatusException ex)
+            {
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+                Application.Exit();
+            }
+            catch (JsonException ex)
+            {
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+                Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+                Application.Exit();
+            }
 
             if (Program.lastTeam != null)
             {
