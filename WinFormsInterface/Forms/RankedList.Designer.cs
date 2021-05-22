@@ -29,34 +29,40 @@ namespace WinFormsInterface
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.dgRanks = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.dgRanks)).BeginInit();
             this.SuspendLayout();
             // 
-            // listView1
+            // dgRanks
             // 
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 0);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(800, 450);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.dgRanks.AllowUserToAddRows = false;
+            this.dgRanks.AllowUserToDeleteRows = false;
+            this.dgRanks.AllowUserToOrderColumns = true;
+            this.dgRanks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgRanks.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgRanks.Location = new System.Drawing.Point(0, 0);
+            this.dgRanks.Name = "dgRanks";
+            this.dgRanks.ReadOnly = true;
+            this.dgRanks.RowTemplate.Height = 25;
+            this.dgRanks.Size = new System.Drawing.Size(800, 450);
+            this.dgRanks.TabIndex = 0;
             // 
             // RankedList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.dgRanks);
             this.Name = "RankedList";
             this.Text = "RankedList";
             this.Load += new System.EventHandler(this.RankedList_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dgRanks)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.DataGridView dgRanks;
     }
 }

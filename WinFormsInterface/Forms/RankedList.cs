@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataHandler;
+using DataHandler.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -17,7 +19,7 @@ namespace WinFormsInterface
 
         private void RankedList_Load(object sender, EventArgs e)
         {
-
+            dgRanks.DataSource = Fetch.FetchJsonFromUrl<List<Match>>(URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), "ENG"));
         }
     }
 }
