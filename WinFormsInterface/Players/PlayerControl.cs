@@ -97,20 +97,33 @@ namespace WinFormsInterface
         {
             using (OpenFileDialog fileDialog = new OpenFileDialog())
             {
-                var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-                var downloads = home + "\\Downloads";
-                fileDialog.InitialDirectory = downloads;
-                fileDialog.Filter = "PNG files (*.png)|*.png|JPEG files (*.jpg, *jpeg)|*.jp*g|All files (*.*)|*.*";
-                fileDialog.FilterIndex = 1;
-                fileDialog.RestoreDirectory = true;
-
-                if(fileDialog.ShowDialog() == DialogResult.OK)
+                // little time, bad code
+                try
                 {
-                    var filePath = fileDialog.FileName;
-                    var fileStream = fileDialog.OpenFile();
-                    pbPlayerPortrait.Image = Image.FromFile(filePath);
+                    var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                    var downloads = home + "\\Downloads";
+                    fileDialog.InitialDirectory = downloads;
+                    fileDialog.Filter = "PNG files (*.png)|*.png|JPEG files (*.jpg, *jpeg)|*.jp*g|All files (*.*)|*.*";
+                    fileDialog.FilterIndex = 1;
+                    fileDialog.RestoreDirectory = true;
+                    if (fileDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        string destinationDirectory = Program.userSettings.GenderedRepresentationFilePath() + Program.lastTeam.FifaCode;
+                        if (!Directory.Exists(destinationDirectory))
+                        {
+                            Directory.CreateDirectory(destinationDirectory);
+                        }
+                        string destinationFile = destinationDirectory + $"/{playerData.ShirtNumber}.{fileDialog.FileName.Split('.').Last()}";
+                        File.Copy(fileDialog.FileName, destinationFile, true);
+                        this.playerData.PortraitPath = destinationFile;
+                        pbPlayerPortrait.Image = Image.FromFile(destinationFile);
+                        (this.FindForm() as FavoritePlayers).SaveState();
+                    }
                 }
-
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Unable to set player icon.");
+                }
             }
         }
     }

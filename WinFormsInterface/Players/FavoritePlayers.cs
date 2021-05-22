@@ -56,7 +56,23 @@ namespace WinFormsInterface
 
                 players.ForEach(x =>
                 {
-                    var playerControl = PlayerControlFactory(x);
+                    PlayerControl playerControl;
+                    if (x.PortraitPath != null)
+                    {
+                        try
+                        {
+                            Image portrait = Image.FromFile(x.PortraitPath);
+                            playerControl = PlayerControlFactory(x, portrait);
+                        }
+                        catch (Exception)
+                        {
+                            playerControl = PlayerControlFactory(x);
+                        }
+                    }
+                    else
+                    {
+                        playerControl = PlayerControlFactory(x);
+                    }
                     if ((bool)x.Favorite)
                     {
                         flFavorites.Controls.Add(playerControl);
@@ -101,7 +117,7 @@ namespace WinFormsInterface
             playerControls.ForEach(playerPanel.Controls.Add);
         }
 
-        private Control PlayerControlFactory(Player playerData)
+        private PlayerControl PlayerControlFactory(Player playerData)
         {
             PlayerControl playerControl = new PlayerControl(playerData);
             List<string> st = new List<string>();
@@ -115,7 +131,12 @@ namespace WinFormsInterface
 
             return playerControl;
         }
-
+        private PlayerControl PlayerControlFactory(Player playerData, Image portrait)
+        {
+            var playerControl = PlayerControlFactory(playerData);
+            playerControl.SetPlayerImage(portrait);
+            return playerControl;
+        }
         private void Control_MouseDown(object sender, MouseEventArgs e)
         {
             Control control = sender as Control;
@@ -138,19 +159,19 @@ namespace WinFormsInterface
             if (dndSuccessful)
             {
                 MoveSelectedControls();
+                SortPlayers(flFavorites);
+                SortPlayers(flOtherPlayers);
             }
             else
             {
                 playerControl.SetSelectionStatus(!wasSelected);
             }
             ResetPanels();
-            SortPlayers(flFavorites);
-            SortPlayers(flOtherPlayers);
             SaveState();
 
         }
 
-        private void SaveState()
+        internal void SaveState()
         {
             try
             {
@@ -228,7 +249,8 @@ namespace WinFormsInterface
         }
         private void tsMenuRankedList_Click(object sender, EventArgs e)
         {
-
+            RankedList rankedList = new RankedList();
+            rankedList.Show();
         }
     }
 }
