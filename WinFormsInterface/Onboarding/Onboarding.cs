@@ -24,6 +24,7 @@ namespace WinFormsInterface
         }
 
         private IDictionary<int, int> results;
+        private bool keepAlive = false;
 
         public void nextStep()
         {
@@ -53,6 +54,7 @@ namespace WinFormsInterface
                 try
                 {
                     File.WriteAllText(Program.USER, user.ToString());
+                    keepAlive = true;
                 }
                 catch (Exception)
                 {
@@ -61,6 +63,7 @@ namespace WinFormsInterface
             }
             catch (Exception)
             {
+                keepAlive = false;
                 EndOnboarding();
             }
             finally
@@ -115,12 +118,24 @@ namespace WinFormsInterface
             switch (e.KeyCode)
             {
                 case Keys.Escape:
+                    if (!Program.firstOnboarding)
+                        keepAlive = true;
                     this.Close();
                     break;
                 case Keys.Enter:
                     nextStep();
                     break;
             }
+        }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (e.CloseReason == CloseReason.WindowsShutDown) return;
+            if (keepAlive) return;
+
+            // Confirm user wants to close
+            Application.Exit();
         }
     }
 }
