@@ -28,7 +28,7 @@ namespace WinFormsInterface
             English = 0,
             Croatian = 1
         }
-        public string GenderedRepresentation()
+        public string GenderedRepresentationUrl()
         {
             switch (SavedLeague)
             {
@@ -36,6 +36,18 @@ namespace WinFormsInterface
                     return URL.F_BASE_URL;
                 case League.Male:
                     return URL.M_BASE_URL;
+                default:
+                    throw new Exception("Unsupported league selected");
+            }
+        }
+        public string GenderedRepresentationFilePath()
+        {
+            switch (SavedLeague)
+            {
+                case League.Female:
+                    return Program.FEMALE_TEAMS;
+                case League.Male:
+                    return Program.MALE_TEAMS;
                 default:
                     throw new Exception("Unsupported league selected");
             }
