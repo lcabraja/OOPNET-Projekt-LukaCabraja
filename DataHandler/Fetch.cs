@@ -37,7 +37,7 @@ namespace DataHandler
             var res = await client.ExecuteAsync(new RestRequest(Method.GET));
             if (res.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                throw new HttpStatusException($"Bad request, HTTP response status code: {res.StatusCode}");
+                throw new HttpStatusException($"HTTP response status code: {res.StatusCode}");
             }
             T data = JsonConvert.DeserializeObject<T>(res.Content);
             return data;
