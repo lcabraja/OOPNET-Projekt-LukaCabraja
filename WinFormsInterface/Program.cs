@@ -13,6 +13,8 @@ namespace WinFormsInterface
         public const string BASE_DIR = "savedata";
         public static string USER { get { return BASE_DIR + "/user.json"; } }
         public static string REPRESENTATION { get { return BASE_DIR + "/rep.json"; } }
+        public static string FEMALE_TEAMS { get { return BASE_DIR + "/f/"; } }
+        public static string MALE_TEAMS { get { return BASE_DIR + "/m/"; } }
         public static UserSettings userSettings { get; set; }
         public static TeamResult lastTeam { get; set; }
 
@@ -51,6 +53,8 @@ namespace WinFormsInterface
             try
             {
                 Directory.CreateDirectory(BASE_DIR);
+                Directory.CreateDirectory(FEMALE_TEAMS);
+                Directory.CreateDirectory(MALE_TEAMS);
             }
             catch (Exception ex)
             {
