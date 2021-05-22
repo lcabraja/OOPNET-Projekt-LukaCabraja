@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace WinFormsInterface
 {
@@ -19,6 +20,7 @@ namespace WinFormsInterface
             InitializeComponent();
         }
 
+        private Match match;
         private List<Player> players = new List<Player>();
         internal FlowLayoutPanel departedFrom;
         internal FlowLayoutPanel goingTo;
@@ -26,24 +28,46 @@ namespace WinFormsInterface
 
         private async void FavoritePlayers_Load(object sender, EventArgs e)
         {
-            var url = URL.MatchesFiltered(
-                Program.userSettings.GenderedRepresentation(),
-                Program.lastTeam.FifaCode);
-            //url = URL.Matches(Program.userSettings.GenderedRepresentation());
+            flOtherPlayers.Controls.Clear();
+            flFavorites.Controls.Clear();
+            players.Clear();
             try
             {
-                var matches = await Fetch.FetchJsonFromUrlAsync<List<Match>>(url);
-                if (matches[0].HomeTeam.Code == Program.lastTeam.FifaCode)
+                string path = Program.userSettings.GenderedRepresentationFilePath() + Program.lastTeam.FifaCode + ".json";
+                if (File.Exists(path))
                 {
-                    matches[0].HomeTeamStatistics.StartingEleven.ForEach(players.Add);
-                    matches[0].HomeTeamStatistics.Substitutes.ForEach(players.Add);
+                    players = (await Fetch.FetchJsonFromFileAsync<List<Player>>(path));
                 }
-                else if (matches[0].AwayTeam.Code == Program.lastTeam.FifaCode)
+                else
                 {
-                    matches[0].AwayTeamStatistics.StartingEleven.ForEach(players.Add);
-                    matches[0].AwayTeamStatistics.Substitutes.ForEach(players.Add);
+                    var url = URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), Program.lastTeam.FifaCode);
+                    match = (await Fetch.FetchJsonFromUrlAsync<List<Match>>(url)).First();
+                    if (match.HomeTeam.Code == Program.lastTeam.FifaCode)
+                    {
+                        match.HomeTeamStatistics.StartingEleven.ForEach(players.Add);
+                        match.HomeTeamStatistics.Substitutes.ForEach(players.Add);
+                    }
+                    else if (match.AwayTeam.Code == Program.lastTeam.FifaCode)
+                    {
+                        match.AwayTeamStatistics.StartingEleven.ForEach(players.Add);
+                        match.AwayTeamStatistics.Substitutes.ForEach(players.Add);
+                    }
                 }
-                players.ForEach(x => flOtherPlayers.Controls.Add(PlayerControlFactory(x)));
+
+                players.ForEach(x =>
+                {
+                    var playerControl = PlayerControlFactory(x);
+                    if ((bool)x.Favorite)
+                    {
+                        flFavorites.Controls.Add(playerControl);
+                    }
+                    else
+                    {
+                        flOtherPlayers.Controls.Add(playerControl);
+                    }
+                });
+                SortPlayers(flFavorites);
+                SortPlayers(flOtherPlayers);
             }
             catch (HttpStatusException ex)
             {
@@ -60,6 +84,21 @@ namespace WinFormsInterface
                 MessageBox.Show(ex.Message, ex.GetType().Name);
                 Application.Exit();
             }
+        }
+
+        private void SortPlayers(FlowLayoutPanel playerPanel)
+        {
+            List<PlayerControl> playerControls = playerPanel.Controls.Cast<PlayerControl>().ToList();
+            playerControls.Sort((a, b) =>
+            {
+                if (a.playerData.Captain || b.playerData.Captain)
+                {
+                    return -a.playerData.Captain.CompareTo(b.playerData.Captain);
+                }
+                return a.playerData.Name.Split(' ').Last().CompareTo(b.playerData.Name.Split(' ').Last());
+            });
+            playerPanel.Controls.Clear();
+            playerControls.ForEach(playerPanel.Controls.Add);
         }
 
         private Control PlayerControlFactory(Player playerData)
@@ -105,24 +144,42 @@ namespace WinFormsInterface
                 playerControl.SetSelectionStatus(!wasSelected);
             }
             ResetPanels();
+            SortPlayers(flFavorites);
+            SortPlayers(flOtherPlayers);
+            SaveState();
 
         }
+
+        private void SaveState()
+        {
+            try
+            {
+                string path = Program.userSettings.GenderedRepresentationFilePath() + Program.lastTeam.FifaCode + ".json";
+                File.WriteAllText(path, JsonConvert.SerializeObject(players));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Could not save positions...");
+            }
+        }
+
         internal void MoveSelectedControls()
         {
             FindSelectedPlayers().ForEach(MovePlayerControl);
         }
-        private void MovePlayerControl(PlayerControl x)
+        private void MovePlayerControl(PlayerControl movingPlayerControl)
         {
             bool favoriteStatus = (goingTo == flFavorites) ? true : false;
             if (favoriteStatus && flFavorites.Controls.Count > 2)
             {
-                x.SetSelectionStatus(false);
+                movingPlayerControl.SetSelectionStatus(false);
                 return;
             }
-            x.SetFavoriteStatus(favoriteStatus);
-            departedFrom.Controls.Remove(x);
-            goingTo.Controls.Add(x);
-            x.SetSelectionStatus(false);
+            movingPlayerControl.SetFavoriteStatus(favoriteStatus);
+            players.Find(x => x.ShirtNumber == movingPlayerControl.playerData.ShirtNumber).Favorite = favoriteStatus;
+            departedFrom.Controls.Remove(movingPlayerControl);
+            goingTo.Controls.Add(movingPlayerControl);
+            movingPlayerControl.SetSelectionStatus(false);
         }
 
         private List<PlayerControl> FindSelectedPlayers()
@@ -164,6 +221,9 @@ namespace WinFormsInterface
         }
         private void tsMenuSettings_Click(object sender, EventArgs e)
         {
+            Onboarding onboarding = new Onboarding();
+            onboarding.ShowDialog();
+            this.OnLoad(new EventArgs());
 
         }
         private void tsMenuRankedList_Click(object sender, EventArgs e)
