@@ -37,8 +37,8 @@ namespace WinFormsInterface
             // 
             // cbRepresentation
             // 
-            this.cbRepresentation.FormattingEnabled = true;
             resources.ApplyResources(this.cbRepresentation, "cbRepresentation");
+            this.cbRepresentation.FormattingEnabled = true;
             this.cbRepresentation.Name = "cbRepresentation";
             // 
             // btFinish
@@ -65,7 +65,6 @@ namespace WinFormsInterface
             this.Name = "FavoriteRepresentation";
             this.Load += new System.EventHandler(this.FavoriteRepresentation_Load);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
