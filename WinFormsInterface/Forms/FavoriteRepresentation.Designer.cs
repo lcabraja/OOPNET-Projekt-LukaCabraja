@@ -69,7 +69,9 @@ namespace WinFormsInterface
             this.Controls.Add(this.lbTooltip);
             this.Controls.Add(this.btFinish);
             this.Controls.Add(this.cbRepresentation);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FavoriteRepresentation";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FavoriteRepresentation";
             this.Load += new System.EventHandler(this.FavoriteRepresentation_Load);
             this.ResumeLayout(false);
