@@ -1,0 +1,50 @@
+﻿{
+  "Continue": {
+    "hr": "Nastavi",
+    "en": "Continue"
+  },
+  "Finish": {
+    "hr": "Zavrsi",
+    "en": "Finish"
+  },
+  "AwaitFetch": {
+    "hr": "Veza prekinuta...",
+    "en": "Connection interrupted..."
+  },
+  "Fetching": {
+    "hr": "Dobavaljanje podataka...",
+    "en": "Fetching data..."
+  },
+  "Done": {
+    "hr": "Dobavljeno.",
+    "en": "Done."
+  },
+  "Settings": {
+    "hr": "Postavke",
+    "en": "Settings"
+  },
+  "RankedList": {
+    "hr": "Rang lista",
+    "en": "Ranked list"
+  },
+  "Onboarding": {
+    "hr": "Novi korisnik",
+    "en": "Onboarding"
+  },
+  "Female": {
+    "hr": "Zensko",
+    "en": "Female"
+  },
+  "Male": {
+    "hr": "Musko",
+    "en": "Male"
+  },
+  "Championship": {
+    "hr": "Prvenstvo",
+    "en": "Championship"
+  },
+  "Language": {
+    "hr": "Jezik",
+    "en": "Language"
+  }
+}
