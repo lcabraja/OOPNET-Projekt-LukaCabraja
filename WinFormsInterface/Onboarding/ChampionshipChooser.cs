@@ -32,6 +32,8 @@ namespace WinFormsInterface
 
         private void ChampionshipChooser_Load(object sender, EventArgs e)
         {
+            rbFemale.Text = Program.LocalizedString("Female");
+            rbMale.Text = Program.LocalizedString("Male");
             Controls.OfType<RadioButton>()
                     .ToList()
                     .ForEach(p => { p.Checked = false; p.TabStop = false; });

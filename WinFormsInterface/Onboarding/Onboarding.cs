@@ -50,7 +50,7 @@ namespace WinFormsInterface
             try
             {
                 user = new UserSettings(results[0], results[1]);
-                Program.userSettings = user;
+                Program.UpdateUser(user);
                 try
                 {
                     File.WriteAllText(Program.USER, user.ToString());
@@ -91,13 +91,14 @@ namespace WinFormsInterface
 
         private void Onboarding_Load(object sender, EventArgs e)
         {
+            this.Text = Program.LocalizedString("Onboarding");
             var tp = new TabPage();
             tp.Controls.Add(new ChampionshipChooser());
-            tp.Text = "Championship"; // TODO: localization
+            tp.Text = Program.LocalizedString("Championship");
             tcWizard.TabPages.Add(tp);
             tp = new TabPage();
             tp.Controls.Add(new LanguageChooser());
-            tp.Text = "Language"; // TODO: localization
+            tp.Text = Program.LocalizedString("Language");
             tcWizard.TabPages.Add(tp);
 
             results = new Dictionary<int, int>();
@@ -111,6 +112,18 @@ namespace WinFormsInterface
                               .ReturnValue())
             {
                 e.Cancel = true;
+            }
+            var page = tcWizard.TabPages[tcWizard.SelectedIndex].Controls.OfType<IHasIntProperty>().First();
+            var newValue = page.ReturnValue();
+            if (newValue == -1)
+            {
+                return;
+            }
+            results[tcWizard.SelectedIndex] = newValue;
+            if (tcWizard.SelectedIndex == tcWizard.TabCount - 1)
+            {
+                finishOnboarding();
+                return;
             }
         }
         private void onboarding_KeyUp(object sender, KeyEventArgs e)

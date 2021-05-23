@@ -60,10 +60,10 @@ namespace WinFormsInterface
             this.rbEnglish.AutoSize = true;
             this.rbEnglish.Location = new System.Drawing.Point(15, 16);
             this.rbEnglish.Name = "rbEnglish";
-            this.rbEnglish.Size = new System.Drawing.Size(68, 19);
+            this.rbEnglish.Size = new System.Drawing.Size(63, 19);
             this.rbEnglish.TabIndex = 3;
             this.rbEnglish.TabStop = true;
-            this.rbEnglish.Text = "Engleski";
+            this.rbEnglish.Text = "English";
             this.rbEnglish.UseVisualStyleBackColor = true;
             // 
             // LanguageChooser
