@@ -190,7 +190,7 @@ namespace WinFormsInterface
         }
         private void MovePlayerControl(PlayerControl movingPlayerControl)
         {
-            bool favoriteStatus = (goingTo == flFavorites) ? true : false;
+            bool favoriteStatus = (goingTo == flFavorites);
             if (favoriteStatus && flFavorites.Controls.Count > 2)
             {
                 movingPlayerControl.SetSelectionStatus(false);

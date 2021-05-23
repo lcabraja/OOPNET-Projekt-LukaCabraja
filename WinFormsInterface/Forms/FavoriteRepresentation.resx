@@ -57,4 +57,103 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Drawing.Primitives" name="System.Drawing.Primitives, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="cbRepresentation.Location" type="System.Drawing.Point, System.Drawing.Primitives">
+    <value>13, 13</value>
+  </data>
+  <data name="cbRepresentation.Size" type="System.Drawing.Size, System.Drawing.Primitives">
+    <value>279, 23</value>
+  </data>
+  <assembly alias="System.Private.CoreLib" name="System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e" />
+  <data name="cbRepresentation.TabIndex" type="System.Int32, System.Private.CoreLib">
+    <value>0</value>
+  </data>
+  <data name="&gt;&gt;cbRepresentation.Name" xml:space="preserve">
+    <value>cbRepresentation</value>
+  </data>
+  <data name="&gt;&gt;cbRepresentation.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;cbRepresentation.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;cbRepresentation.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
+  <data name="btFinish.Location" type="System.Drawing.Point, System.Drawing.Primitives">
+    <value>217, 136</value>
+  </data>
+  <data name="btFinish.Size" type="System.Drawing.Size, System.Drawing.Primitives">
+    <value>75, 23</value>
+  </data>
+  <data name="btFinish.TabIndex" type="System.Int32, System.Private.CoreLib">
+    <value>1</value>
+  </data>
+  <data name="btFinish.Text" xml:space="preserve">
+    <value>Nastavi</value>
+  </data>
+  <data name="&gt;&gt;btFinish.Name" xml:space="preserve">
+    <value>btFinish</value>
+  </data>
+  <data name="&gt;&gt;btFinish.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Button, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;btFinish.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;btFinish.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="lbTooltip.AutoSize" type="System.Boolean, System.Private.CoreLib">
+    <value>True</value>
+  </data>
+  <data name="lbTooltip.Location" type="System.Drawing.Point, System.Drawing.Primitives">
+    <value>13, 43</value>
+  </data>
+  <data name="lbTooltip.Size" type="System.Drawing.Size, System.Drawing.Primitives">
+    <value>120, 15</value>
+  </data>
+  <data name="lbTooltip.TabIndex" type="System.Int32, System.Private.CoreLib">
+    <value>2</value>
+  </data>
+  <data name="lbTooltip.Text" xml:space="preserve">
+    <value>Konekcija prekinuta...</value>
+  </data>
+  <data name="&gt;&gt;lbTooltip.Name" xml:space="preserve">
+    <value>lbTooltip</value>
+  </data>
+  <data name="&gt;&gt;lbTooltip.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;lbTooltip.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;lbTooltip.ZOrder" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <metadata name="$this.Localizable" type="System.Boolean, System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e">
+    <value>True</value>
+  </metadata>
+  <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing.Primitives">
+    <value>7, 15</value>
+  </data>
+  <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing.Primitives">
+    <value>304, 171</value>
+  </data>
+  <data name="$this.MinimumSize" type="System.Drawing.Size, System.Drawing.Primitives">
+    <value>320, 210</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="$this.StartPosition" type="System.Windows.Forms.FormStartPosition, System.Windows.Forms">
+    <value>CenterScreen</value>
+  </data>
+  <data name="$this.Text" xml:space="preserve">
+    <value>Omiljena reprezentacija</value>
+  </data>
+  <data name="&gt;&gt;$this.Name" xml:space="preserve">
+    <value>FavoriteRepresentation</value>
+  </data>
+  <data name="&gt;&gt;$this.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Form, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
 </root>

@@ -29,6 +29,7 @@ namespace WinFormsInterface
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FavoriteRepresentation));
             this.cbRepresentation = new System.Windows.Forms.ComboBox();
             this.btFinish = new System.Windows.Forms.Button();
             this.lbTooltip = new System.Windows.Forms.Label();
@@ -37,44 +38,31 @@ namespace WinFormsInterface
             // cbRepresentation
             // 
             this.cbRepresentation.FormattingEnabled = true;
-            this.cbRepresentation.Location = new System.Drawing.Point(13, 13);
+            resources.ApplyResources(this.cbRepresentation, "cbRepresentation");
             this.cbRepresentation.Name = "cbRepresentation";
-            this.cbRepresentation.Size = new System.Drawing.Size(279, 23);
-            this.cbRepresentation.TabIndex = 0;
             // 
             // btFinish
             // 
-            this.btFinish.Location = new System.Drawing.Point(217, 136);
+            resources.ApplyResources(this.btFinish, "btFinish");
             this.btFinish.Name = "btFinish";
-            this.btFinish.Size = new System.Drawing.Size(75, 23);
-            this.btFinish.TabIndex = 1;
-            this.btFinish.Text = "Nastavi";
             this.btFinish.UseVisualStyleBackColor = true;
             this.btFinish.Click += new System.EventHandler(this.btFinish_Click);
             // 
             // lbTooltip
             // 
-            this.lbTooltip.AutoSize = true;
-            this.lbTooltip.Location = new System.Drawing.Point(13, 43);
+            resources.ApplyResources(this.lbTooltip, "lbTooltip");
             this.lbTooltip.Name = "lbTooltip";
-            this.lbTooltip.Size = new System.Drawing.Size(140, 15);
-            this.lbTooltip.TabIndex = 2;
-            this.lbTooltip.Text = "Connection interrupted...";
             // 
             // FavoriteRepresentation
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(304, 171);
             this.Controls.Add(this.lbTooltip);
             this.Controls.Add(this.btFinish);
             this.Controls.Add(this.cbRepresentation);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(320, 210);
             this.Name = "FavoriteRepresentation";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "FavoriteRepresentation";
             this.Load += new System.EventHandler(this.FavoriteRepresentation_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
