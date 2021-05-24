@@ -26,9 +26,9 @@ namespace DataHandler
             {
                 return locales[request][locale].ToString();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return "AAAAAAAAa";
+                return "MISSING STRING";
             }
         }
     }

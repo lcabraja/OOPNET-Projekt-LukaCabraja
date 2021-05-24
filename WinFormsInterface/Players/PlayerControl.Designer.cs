@@ -177,6 +177,7 @@ namespace WinFormsInterface
             this.Controls.Add(this.pnIconPanel);
             this.Name = "PlayerControl";
             this.Size = new System.Drawing.Size(98, 168);
+            this.Load += new System.EventHandler(this.PlayerControl_Load);
             this.pnIconPanel.ResumeLayout(false);
             this.pnIconPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbPlayerPortrait)).EndInit();

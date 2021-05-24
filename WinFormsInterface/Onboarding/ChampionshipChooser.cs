@@ -34,6 +34,7 @@ namespace WinFormsInterface
         {
             rbFemale.Text = Program.LocalizedString("Female");
             rbMale.Text = Program.LocalizedString("Male");
+            btContinue.Text = Program.LocalizedString("Continue");
             Controls.OfType<RadioButton>()
                     .ToList()
                     .ForEach(p => { p.Checked = false; p.TabStop = false; });

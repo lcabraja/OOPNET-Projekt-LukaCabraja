@@ -19,6 +19,10 @@
     "hr": "Dobavljeno.",
     "en": "Done."
   },
+  "Aborting": {
+    "hr": "Prekinuto...",
+    "en": "Aborting...."
+  },
   "Settings": {
     "hr": "Postavke",
     "en": "Settings"
@@ -46,5 +50,41 @@
   "Language": {
     "hr": "Jezik",
     "en": "Language"
+  },
+  "errorSaveRepresentation": {
+    "hr": "Nije bilo moguce spremiti trenutnu reprezentaciju",
+    "en": "Could not save current representation"
+  },
+  "errorOnboarding": {
+    "hr": "Greska pri kreiranju novog korisnika",
+    "en": "Error during onboarding."
+  },
+  "errorEndOnboarding": {
+    "hr": "Molimo rucno obrisite user.json",
+    "en": "Please manually delete user.json"
+  },
+  "userSettingsError": {
+    "hr": "Greska u postavkama racuna.",
+    "en": "User settings error."
+  },
+  "Captain": {
+    "hr": "Kapetan",
+    "en": "Captain"
+  },
+  "errorRequest": {
+    "hr": "Greska pri povezivanju",
+    "en": "Request Error"
+  },
+  "errorJson": {
+    "hr": "Greska pri citanju spremljenih postavki",
+    "en": "Error while parsing save data file"
+  },
+  "FavoritePlayers": {
+    "hr": "Omiljeni igraci",
+    "en": "Favorite players"
+  },
+  "FavoriteRepresentation": {
+    "hr": "Omiljena reprezentacija",
+    "en": "Favorite representation"
   }
 }

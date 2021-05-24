@@ -28,6 +28,9 @@ namespace WinFormsInterface
 
         private async void FavoritePlayers_Load(object sender, EventArgs e)
         {
+            tsMenuRankedList.Text = Program.LocalizedString("RankedList");
+            tsMenuSettings.Text = Program.LocalizedString("Settings");
+            this.Text = Program.LocalizedString("FavoritePlayers");
             flOtherPlayers.Controls.Clear();
             flFavorites.Controls.Clear();
             players.Clear();
@@ -87,12 +90,13 @@ namespace WinFormsInterface
             }
             catch (HttpStatusException ex)
             {
-                MessageBox.Show(ex.Message, "Request Error");
+                MessageBox.Show(ex.Message, Program.LocalizedString("errorRequest"));
                 Application.Exit();
             }
             catch (JsonException ex)
             {
-                MessageBox.Show(ex.Message, "Json parser exception");
+                MessageBox.Show(ex.Message, Program.LocalizedString("errorRequest"));
+                MessageBox.Show(ex.Message, Program.LocalizedString("errorJson"));
                 Application.Exit();
             }
             catch (Exception ex)

@@ -103,7 +103,7 @@ namespace WinFormsInterface
                     var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                     var downloads = home + "\\Downloads";
                     fileDialog.InitialDirectory = downloads;
-                    fileDialog.Filter = "PNG files (*.png)|*.png|JPEG files (*.jpg, *jpeg)|*.jp*g|All files (*.*)|*.*";
+                    fileDialog.Filter = "Image Files (*.png, *.jpg, *jpeg)|*.jp*g;*.png|All files (*.*)|*.*";
                     fileDialog.FilterIndex = 1;
                     fileDialog.RestoreDirectory = true;
                     if (fileDialog.ShowDialog() == DialogResult.OK)
@@ -125,6 +125,11 @@ namespace WinFormsInterface
                     MessageBox.Show(ex.Message, "Unable to set player icon.");
                 }
             }
+        }
+
+        private void PlayerControl_Load(object sender, EventArgs e)
+        {
+            cbIsCaptain.Text = Program.LocalizedString("Captain");
         }
     }
 }

@@ -32,6 +32,7 @@ namespace WinFormsInterface
 
         private void LanguageChooser_Load(object sender, EventArgs e)
         {
+            btContinue.Text = Program.LocalizedString("Finish");
             Controls.OfType<RadioButton>()
                     .ToList()
                     .ForEach(p => p.TabStop = false);

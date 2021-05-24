@@ -22,9 +22,11 @@ namespace WinFormsInterface
         }
         private async void FavoriteRepresentation_Load(object sender, EventArgs e)
         {
-            lbTooltip.Text = "Fetching...";
+            btFinish.Text = Program.LocalizedString("Finish");
+            this.Text = Program.LocalizedString("FavoriteRepresentation");
             try
             {
+                lbTooltip.Text = Program.LocalizedString("Fetching");
                 var representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(Program.userSettings.GenderedRepresentationUrl()));
 
                 teams = representations;
@@ -32,7 +34,7 @@ namespace WinFormsInterface
                                                              .Select(x => $"{x.Country} ({x.FifaCode})")
                                                              .ToList();
                 dataLoaded = true;
-                lbTooltip.Text = "Done.";
+                lbTooltip.Text = Program.LocalizedString("Done");
                 if (Program.lastTeam != null)
                 {
                     cbRepresentation.SelectedItem =
@@ -41,19 +43,19 @@ namespace WinFormsInterface
             }
             catch (HttpStatusException ex)
             {
-                lbTooltip.Text = "Aborting...";
+                lbTooltip.Text = Program.LocalizedString("Aborting");
                 MessageBox.Show(ex.Message, ex.GetType().Name);
                 Application.Exit();
             }
             catch (JsonException ex)
             {
-                lbTooltip.Text = "Aborting...";
+                lbTooltip.Text = Program.LocalizedString("Aborting");
                 MessageBox.Show(ex.Message, ex.GetType().Name);
                 Application.Exit();
             }
             catch (Exception ex)
             {
-                lbTooltip.Text = "Aborting...";
+                lbTooltip.Text = Program.LocalizedString("Aborting");
                 MessageBox.Show(ex.Message, ex.GetType().Name);
                 Application.Exit();
             }
@@ -71,7 +73,7 @@ namespace WinFormsInterface
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Could not save current representation");
+                    MessageBox.Show(ex.Message, Program.LocalizedString("errorSaveRepresentation"));
                 }
         }
 

@@ -74,14 +74,14 @@ namespace WinFormsInterface
 
         private static void EndOnboarding()
         {
-            MessageBox.Show("Error during onboarding.");
+            MessageBox.Show(Program.LocalizedString("errorOnboarding"));
             try
             {
                 File.Delete(Program.USER);
             }
             catch
             {
-                MessageBox.Show("Please manually delete user.json", "User settings error.");
+                MessageBox.Show(Program.LocalizedString("errorEndOnboarding"), Program.LocalizedString("userSettingsError"));
             }
             finally
             {
