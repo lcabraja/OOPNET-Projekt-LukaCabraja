@@ -41,9 +41,9 @@ namespace WinFormsInterface
             tryFifa_code();
             Application.Run(new FavoriteRepresentation());
             Application.Run(new FavoritePlayers());
-            //TODO: += new System.EventHandler(this.FavoriteRepresentation_Load); or just += this.FavoriteRepresentation_Load;
-            //TODO: ranked list, how?
-            //TODO: where do i save files?
+            //TODO: += new System.EventHandler(this.FavoriteReresentation_Load); or just += this.FavoriteRepresentation_Load; => doesn't matter
+            //TODO: ranked list, how? => whatever im using now
+            //TODO: where do i save files? => appdata
             //TODO: printing
         }
 
