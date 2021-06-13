@@ -50,12 +50,19 @@
             <RadioButton Margin="0 2 0 2" x:Name="rbRepMale">
                 Male
             </RadioButton>
+            <Button x:Name="btUpdateRepresentation"
+                    Click="btUpdateRepresentation_Click"
+                    IsEnabled="False"
+                    >
+                Update Representation
+            </Button>
         </StackPanel>
         <!--Representation-->
         <StackPanel
             x:Name="spRepresentation"
             Grid.Row="1"
             Grid.Column="0"
+            Grid.RowSpan="2"
             IsEnabled="False"
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
@@ -74,6 +81,23 @@
             >
             </ComboBox>
             <Label x:Name="lbLoadingRepresentation">
+            </Label>
+            <Label 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+            >
+                Guest Representation
+            </Label>
+            <ComboBox
+                x:Name="cbRepresentationGuest"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                MinWidth="100"
+            >
+            </ComboBox>
+            <Label x:Name="lbLoadingRepresentationGuest">
+            </Label>
+            <Label x:Name="lbScore">
             </Label>
         </StackPanel>
         <!--Screen Size-->
@@ -102,6 +126,31 @@
                 640x360
             </RadioButton>
         </StackPanel>
+        <!--Guest Rep-->
+        <!--<StackPanel
+            x:Name="spRepresentationGuest"
+            Grid.Row="2"
+            Grid.Column="0"
+            IsEnabled="False"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            >
+            <Label 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+            >
+                Guest Representation
+            </Label>
+            <ComboBox
+                x:Name="cbRepresentationGuest"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                MinWidth="100"
+            >
+            </ComboBox>
+            <Label x:Name="lbLoadingRepresentationGuest">
+            </Label>
+        </StackPanel>-->
         <Button
             x:Name="btContinue"
             Grid.Column="1"

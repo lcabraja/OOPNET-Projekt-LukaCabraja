@@ -23,11 +23,8 @@ namespace WPFInterface
     public partial class Startup : Window
     {
         // ===================================================================================== Props & Variables
-        private IDictionary<int, int> results;
         private bool keepAlive = false;
-        private bool dataLoaded = false;
         private List<TeamResult> teams;
-
         private UserSettings.Language cachedLanguage;
         private bool isLanguagePicked = false;
         private UserSettings.League cachedLeague;
@@ -35,7 +32,13 @@ namespace WPFInterface
         private int cachedResolution;
         private bool isScreenPicked = false;
         private bool isSelfUpdate = false;
-        private bool isDataFetched = false;
+        private List<TeamResult> cachedRepresentaionF = null;
+        private List<TeamResult> cachedRepresentaionM = null;
+        private bool isDataFetchedF = false;
+        private bool isDataFetchedM = false;
+        private bool isWithinSetup = false;
+        private List<Match> lastMatch = null;
+        private string lastFifaCode = string.Empty;
         // ===================================================================================== Constructor & Loaded
         public Startup()
         {
@@ -56,6 +59,9 @@ namespace WPFInterface
             rbSize480p.Checked += rbResolution_Checked;
             rbSize360p.Checked += rbResolution_Checked;
 
+            cbRepresentation.DropDownClosed += CbRepresentation_DropDownClosed;
+            cbRepresentationGuest.DropDownClosed += CbRepresentationGuest_DropDownClosed;
+
         }
         private void Startup_Loaded(object sender, RoutedEventArgs e)
         {
@@ -71,6 +77,10 @@ namespace WPFInterface
             }
             UpdateRadioLang();
             updateRadioRep();
+            if (App.lastTeam != null)
+            {
+                cbRepresentation.SelectedItem = $"{App.lastTeam.Country} ({App.lastTeam.FifaCode})"; ;
+            }
         }
         // ===================================================================================== Language Radio 
         private void rbLang_Checked(object sender, RoutedEventArgs e)
@@ -134,6 +144,10 @@ namespace WPFInterface
         }
         private void updateRadioRep()
         {
+            if (isRepresentationPicked)
+            {
+                btUpdateRepresentation.IsEnabled = true;
+            }
             isSelfUpdate = true;
             rbRepFem.IsChecked = false;
             rbRepMale.IsChecked = false;
@@ -146,10 +160,11 @@ namespace WPFInterface
                 rbRepMale.IsChecked = true;
             }
             isRepresentationPicked = true;
+            setupLowerHalf();
             tryLowerHalf();
             isSelfUpdate = false;
         }
-        // ===================================================================================== Representation Screen Size
+        // ===================================================================================== Radio Screen Size
         private void rbResolution_Checked(object sender, RoutedEventArgs e)
         {
             if (!isSelfUpdate)
@@ -226,69 +241,159 @@ namespace WPFInterface
                     {
                         lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
                         MessageBox.Show(ex.Message, ex.GetType().Name);
-                        Environment.Exit(0);
+                        Environment.Exit(ex.HResult);
                     }
                     catch (JsonException ex)
                     {
                         lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
                         MessageBox.Show(ex.Message, ex.GetType().Name);
-                        Environment.Exit(0);
+                        Environment.Exit(ex.HResult);
                     }
                     catch (Exception ex)
                     {
                         lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
                         MessageBox.Show(ex.Message, ex.GetType().Name);
-                        Environment.Exit(0);
+                        Environment.Exit(ex.HResult);
                     }
                 }
             }
         }
-        private async void setupLowerHalf()
+        private void setupLowerHalf()
         {
-            spRepresentation.IsEnabled = true;
-            spScreensize.IsEnabled = true;
-            if (!isDataFetched)
+            if (!isWithinSetup)
+            {
+                isWithinSetup = true;
+                spRepresentation.IsEnabled = true;
+                spScreensize.IsEnabled = true;
+
+
+
+                updateComboBoxes();
+                cachedResolution = App.screenSize.ChosenSize;
+                updateRadioResolution();
+
+                isWithinSetup = false;
+            }
+        }
+        private async void updateComboBoxes()
+        {
+            try
             {
                 lbLoadingRepresentation.Content = App.LocalizedString("Fetching");
-                try
+                List<TeamResult> representations = null;
+                switch (cachedLeague)
                 {
-                    var representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(App.userSettings.GenderedRepresentationUrl()));
+                    case UserSettings.League.Female:
+                        if (!isDataFetchedF)
+                        {
+                            representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(URL.F_BASE_URL));
+                            cachedRepresentaionF = representations;
+                            isDataFetchedF = true;
+                        }
+                        else
+                        {
+                            representations = cachedRepresentaionF;
+                        }
+                        teams = representations;
+                        break;
+                    case UserSettings.League.Male:
+                        if (!isDataFetchedM)
+                        {
+                            representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(URL.M_BASE_URL));
+                            cachedRepresentaionM = representations;
+                            isDataFetchedM = true;
+                        }
+                        else
+                        {
+                            representations = cachedRepresentaionM;
+                        }
+                        teams = representations;
+                        break;
+                    default:
+                        break;
+                }
+                var selectedReps = representations.OrderBy(x => x.FifaCode).Select(x => $"{x.Country} ({x.FifaCode})").ToList();
+                cbRepresentation.ItemsSource = selectedReps;
+                cbRepresentationGuest.ItemsSource = selectedReps;
+                cbRepresentation.SelectedIndex = 0;
+                lbLoadingRepresentation.Content = App.LocalizedString("Done");
+            }
+            catch (HttpStatusException ex)
+            {
+                lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+                Environment.Exit(ex.HResult);
+            }
+            catch (JsonException ex)
+            {
+                lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+                Environment.Exit(ex.HResult);
+            }
+            catch (Exception ex)
+            {
+                lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+                Environment.Exit(ex.HResult);
+            }
+        }
+        // ===================================================================================== ComboBox Handlers
+        private void btUpdateRepresentation_Click(object sender, RoutedEventArgs e)
+        {
+            updateComboBoxes();
+            btUpdateRepresentation.IsEnabled = false;
+        }
+        private void CbRepresentation_DropDownClosed(object sender, EventArgs e)
+        {
 
-                    cachedResolution = App.screenSize.ChosenSize;
-                    updateRadioResolution();
+        }
+        private async void CbRepresentationGuest_DropDownClosed(object sender, EventArgs e)
+        {
+            string score = null;
+            lbScore.Content = "Fetching...";
+            try
+            {
+                string fifa_code = FindSelectedRepresentation(cbRepresentation).FifaCode;
+                string fifa_code_guest = FindSelectedRepresentation(cbRepresentationGuest).FifaCode;
 
-                    teams = representations;
-                    cbRepresentation.ItemsSource = representations.OrderBy(x => x.FifaCode)
-                                                                  .Select(x => $"{x.Country} ({x.FifaCode})")
-                                                                  .ToList();
-                    dataLoaded = true;
-                    lbLoadingRepresentation.Content = App.LocalizedString("Done");
-                    if (App.lastTeam != null)
-                    {
-                        cbRepresentation.SelectedItem =
-                            $"{App.lastTeam.Country} ({App.lastTeam.FifaCode})";
-                    }
-                    isDataFetched = true;
+                if (fifa_code != lastFifaCode)
+                {
+                    var url = URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), fifa_code);
+                    lastMatch = await Fetch.FetchJsonFromUrlAsync<List<Match>>(url);
+                }
+                lastFifaCode = fifa_code;
+                var m = lastMatch.Find(x => (x.AwayTeam.Code == fifa_code && x.HomeTeam.Code == fifa_code_guest) ||
+                                (x.AwayTeam.Code == fifa_code_guest && x.HomeTeam.Code == fifa_code));
+                if (m == null)
+                {
+                    score = App.LocalizedString("NoMatchFound");
+                }
+                else
+                {
+                    score = $"{(fifa_code == m.HomeTeam.Code ? m.HomeTeam.Goals : m.AwayTeam.Goals)} : " +
+                        $"{(fifa_code == m.HomeTeam.Code ? m.HomeTeam.Goals : m.AwayTeam.Goals)}";
+                }
 
-                }
-                catch (HttpStatusException ex)
-                {
-                    lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
-                    MessageBox.Show(ex.Message, ex.GetType().Name);
-                    Environment.Exit(0);
-                }
-                catch (JsonException ex)
-                {
-                    lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
-                    MessageBox.Show(ex.Message, ex.GetType().Name);
-                    Environment.Exit(0);
-                }
-                catch (Exception ex)
-                {
-                    lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
-                    MessageBox.Show(ex.Message, ex.GetType().Name);
-                    Environment.Exit(0);
-                }
+            }
+            catch (HttpStatusException ex)
+            {
+                MessageBox.Show(ex.Message, App.LocalizedString("errorRequest"));
+                Environment.Exit(ex.HResult);
+            }
+            catch (JsonException ex)
+            {
+                MessageBox.Show(ex.Message, App.LocalizedString("errorRequest"));
+                MessageBox.Show(ex.Message, App.LocalizedString("errorJson"));
+                Environment.Exit(ex.HResult);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+                Environment.Exit(ex.HResult);
+            }
+            finally
+            {
+                lbScore.Content = score ?? App.LocalizedString("NoMatchFound");
             }
         }
         // ===================================================================================== Locals
@@ -309,7 +414,7 @@ namespace WPFInterface
                 try
                 {
                     File.WriteAllText(App.USER, user.ToString());
-                    File.WriteAllText(App.REPRESENTATION, FindSelectedRepresentation());
+                    File.WriteAllText(App.REPRESENTATION, FindSelectedRepresentation(cbRepresentation).ToString());
                     File.WriteAllText(App.SIZE, size.ToString());
                     App.UpdateUserSettings(user);
                     App.UpdateUserSize(size);
@@ -356,14 +461,14 @@ namespace WPFInterface
                 finishOnboarding();
             }
         }
-        private string FindSelectedRepresentation()
+        private TeamResult FindSelectedRepresentation(ComboBox dropdown)
         {
-            var fifa_code = cbRepresentation.SelectedItem.ToString()
+            var fifa_code = dropdown.SelectedItem.ToString()
                                                          .Split(' ')
                                                          .Last()
                                                          .Substring(1, 3);
 
-            return teams.Find(x => x.FifaCode == fifa_code).ToString();
+            return teams.Find(x => x.FifaCode == fifa_code);
         }
         // ===================================================================================== Close app on premature setup end
         private void Startup_Closing(object sender, System.ComponentModel.CancelEventArgs e)
