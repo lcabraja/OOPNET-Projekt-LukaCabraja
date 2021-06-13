@@ -86,5 +86,73 @@
   "FavoriteRepresentation": {
     "hr": "Omiljena reprezentacija",
     "en": "Favorite representation"
+  },
+  "playerPortrait": {
+    "hr": "Slika Igraca",
+    "en": "Player Portrait"
+  },
+  "playerName": {
+    "hr": "Ime Igraca",
+    "en": "Player Name"
+  },
+  "yellowCards": {
+    "hr": "Zuti Kartoni",
+    "en": "Yellow Cards"
+  },
+  "goals": {
+    "hr": "Golovi",
+    "en": "Goals"
+  },
+  "Venue": {
+    "hr": "Mjesto",
+    "en": "Venue"
+  },
+  "Spectators": {
+    "hr": "Gledatelj",
+    "en": "Spectators"
+  },
+  "HomeTeam": {
+    "hr": "Domaci tim",
+    "en": "Home Team"
+  },
+  "GuestTeam": {
+    "hr": "Gostinski tim",
+    "en": "Guest Team"
+  },
+  "SpectatorList": {
+    "hr": "Rang Gledatelja",
+    "en": "Ranked Spectators"
+  },
+  "PositionSaveError": {
+    "hr": "Nije bilo moguce spremiti pozicije igraca...",
+    "en": "Could not save player positions..."
+  },
+  "IconSetError": {
+    "hr": "Nije bilo moguce postaviti ikonu igracu.",
+    "en": "Unable to set player icon."
+  },
+  "ImageFiles": {
+    "hr": "Slikovne Datoteke",
+    "en": "Image Files"
+  },
+  "Allfiles": {
+    "hr": "Sve Datoteke",
+    "en": "All Files"
+  },
+  "Move": {
+    "hr": "Pomakni",
+    "en": "Move"
+  },
+  "toFavorites": {
+    "hr": "u Favorite",
+    "en": "to Favorites"
+  },
+  "toOthers": {
+    "hr": "u Ostale",
+    "en": "to Others"
+  },
+  "AddPicture": {
+    "hr": "Dodaj sliku",
+    "en": "Add Picture"
   }
 }
