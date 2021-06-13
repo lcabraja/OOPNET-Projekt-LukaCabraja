@@ -68,6 +68,7 @@ namespace WinFormsInterface
                 try
                 {
                     File.WriteAllText(Program.REPRESENTATION, FindSelectedRepresentation());
+                    Program.tryFifa_code();
                     keepAlive = true;
                     this.Close();
                 }

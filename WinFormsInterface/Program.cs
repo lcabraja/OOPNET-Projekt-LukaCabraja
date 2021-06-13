@@ -100,7 +100,7 @@ namespace WinFormsInterface
             }
         }
 
-        private static void tryFifa_code()
+        internal static void tryFifa_code()
         {
             try
             {
