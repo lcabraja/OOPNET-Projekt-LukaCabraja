@@ -267,8 +267,14 @@ namespace WinFormsInterface
         }
         private void tsMenuRankedList_Click(object sender, EventArgs e)
         {
-            RankedList rankedList = new RankedList(players);
+            RankedList rankedList = new RankedList(players, Program.lastTeam.FifaCode);
             rankedList.Show();
+        }
+
+        private void tsMenuRankedSpectators_Click(object sender, EventArgs e)
+        {
+            SpectatorList spectatorList = new SpectatorList(Program.lastTeam.FifaCode);
+            spectatorList.Show();
         }
     }
 }

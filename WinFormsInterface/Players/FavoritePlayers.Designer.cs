@@ -36,6 +36,7 @@ namespace WinFormsInterface
             this.flOtherPlayers = new System.Windows.Forms.FlowLayoutPanel();
             this.tsMenuSettings = new System.Windows.Forms.ToolStripMenuItem();
             this.tsMenuRankedList = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsMenuRankedSpectators = new System.Windows.Forms.ToolStripMenuItem();
             this.tlMainDock.SuspendLayout();
             this.msMenuBar.SuspendLayout();
             this.tlPlayers.SuspendLayout();
@@ -62,7 +63,8 @@ namespace WinFormsInterface
             this.msMenuBar.Dock = System.Windows.Forms.DockStyle.Fill;
             this.msMenuBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsMenuSettings,
-            this.tsMenuRankedList});
+            this.tsMenuRankedList,
+            this.tsMenuRankedSpectators});
             this.msMenuBar.Location = new System.Drawing.Point(0, 0);
             this.msMenuBar.Name = "msMenuBar";
             this.msMenuBar.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -118,7 +120,6 @@ namespace WinFormsInterface
             this.tsMenuSettings.Size = new System.Drawing.Size(66, 36);
             this.tsMenuSettings.Text = "Postavke";
             this.tsMenuSettings.Click += tsMenuSettings_Click;
-
             // 
             // tsMenuRankedList
             // 
@@ -127,6 +128,13 @@ namespace WinFormsInterface
             this.tsMenuRankedList.Text = "Rang lista";
             this.tsMenuRankedList.Click += tsMenuRankedList_Click;
             // 
+            // tsMenuRankedSpectators
+            // 
+            this.tsMenuRankedSpectators.Name = "tsMenuRankedSpectators";
+            this.tsMenuRankedSpectators.Size = new System.Drawing.Size(68, 36);
+            this.tsMenuRankedSpectators.Text = "Gledatelji";
+            this.tsMenuRankedSpectators.Click += tsMenuRankedSpectators_Click;
+            //
             // FavoritePlayers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -157,5 +165,6 @@ namespace WinFormsInterface
         internal System.Windows.Forms.FlowLayoutPanel flOtherPlayers;
         private System.Windows.Forms.ToolStripMenuItem tsMenuSettings;
         private System.Windows.Forms.ToolStripMenuItem tsMenuRankedList;
+        private System.Windows.Forms.ToolStripMenuItem tsMenuRankedSpectators;
     }
 }

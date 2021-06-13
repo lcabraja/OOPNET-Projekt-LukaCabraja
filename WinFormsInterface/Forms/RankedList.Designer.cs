@@ -37,13 +37,18 @@ namespace WinFormsInterface
             // 
             this.dgRanks.AllowUserToAddRows = false;
             this.dgRanks.AllowUserToDeleteRows = false;
-            this.dgRanks.AllowUserToOrderColumns = true;
+            this.dgRanks.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            this.dgRanks.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.DisplayedCells;
             this.dgRanks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgRanks.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgRanks.Location = new System.Drawing.Point(0, 0);
+            this.dgRanks.MultiSelect = false;
             this.dgRanks.Name = "dgRanks";
             this.dgRanks.ReadOnly = true;
+            this.dgRanks.RowHeadersVisible = false;
             this.dgRanks.RowTemplate.Height = 25;
+            this.dgRanks.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.dgRanks.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgRanks.Size = new System.Drawing.Size(800, 450);
             this.dgRanks.TabIndex = 0;
             // 
@@ -54,6 +59,7 @@ namespace WinFormsInterface
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.dgRanks);
             this.Name = "RankedList";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "RankedList";
             this.Load += new System.EventHandler(this.RankedList_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgRanks)).EndInit();
