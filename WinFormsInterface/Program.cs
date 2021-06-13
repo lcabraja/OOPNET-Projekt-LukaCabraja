@@ -27,24 +27,36 @@ namespace WinFormsInterface
         [STAThread]
         static void Main()
         {
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            PreparePaths();
-            if (!userOnboarded())
+            try
             {
-                PrepareLocale();
-                Application.Run(new Onboarding());
-                firstOnboarding = false;
+                Application.SetHighDpiMode(HighDpiMode.SystemAware);
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                PreparePaths();
+                if (!userOnboarded())
+                {
+                    PrepareLocale();
+                    Application.Run(new Onboarding());
+                    firstOnboarding = false;
+                }
+                UpdateLocale();
+                tryFifa_code();
+                //Application.Run(new FavoriteRepresentation());
+                Application.Run(new FavoritePlayers());
             }
-            UpdateLocale();
-            tryFifa_code();
-            Application.Run(new FavoriteRepresentation());
-            Application.Run(new FavoritePlayers());
-            //TODO: += new System.EventHandler(this.FavoriteReresentation_Load); or just += this.FavoriteRepresentation_Load; => doesn't matter
-            //TODO: ranked list, how? => whatever im using now
-            //TODO: where do i save files? => appdata
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "An Unrecoverrable error was detected...");
+
+                File.Delete(USER);
+                Application.Exit();
+            }
+            //+= new System.EventHandler(this.FavoriteReresentation_Load); or just += this.FavoriteRepresentation_Load; => doesn't matter
+            //ranked list, how? => whatever im using now
+            //where do i save files? => appdata
+            //TODO: Do the ranked lists need to be able to be sorted?
             //TODO: printing
+            //TODO: localization
         }
 
         internal static void UpdateUser(UserSettings user)
