@@ -209,7 +209,10 @@ namespace DataHandler.Model
 
         [JsonProperty(Required = Required.Default)]
         public string PortraitPath {get; set;}
-}
+
+        [JsonIgnore]
+        public object Portrait { get; set; }
+    }
 
 public partial class Weather
 {
