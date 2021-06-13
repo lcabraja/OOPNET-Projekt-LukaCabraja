@@ -29,14 +29,17 @@ namespace WinFormsInterface
         {
             try
             {
+                this.Name = Program.LocalizedString("RankedList");
+                this.Text = Program.LocalizedString("RankedList");
+
                 var bigdata = Fetch.FetchJsonFromUrl<List<Match>>(URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), FifaCode));
                 dgRanks.DataSource = SortedData(bigdata);
 
-                dgRanks.Columns[0].Name = "Player Portrait";
-                dgRanks.Columns[1].Name = "Player Name";
-                dgRanks.Columns[2].Name = "Yellow Cards";
+                dgRanks.Columns[0].HeaderText = Program.LocalizedString("playerPortrait");
+                dgRanks.Columns[1].HeaderText = Program.LocalizedString("playerName");
+                dgRanks.Columns[2].HeaderText = Program.LocalizedString("yellowCards");
                 dgRanks.Columns[2].ValueType = typeof(int);
-                dgRanks.Columns[3].Name = "Goals";
+                dgRanks.Columns[3].HeaderText = Program.LocalizedString("goals");
                 dgRanks.Columns[3].ValueType = typeof(int);
 
                 int width = 0;

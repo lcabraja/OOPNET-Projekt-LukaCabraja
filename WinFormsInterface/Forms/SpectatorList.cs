@@ -1,5 +1,6 @@
 ﻿using DataHandler;
 using DataHandler.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,21 +23,42 @@ namespace WinFormsInterface
 
         private void SpectatorList_Load(object sender, EventArgs e)
         {
-            this.CenterToScreen();
-            var bigdata = Fetch.FetchJsonFromUrl<List<Match>>(URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), FifaCode));
-            dgSpectators.DataSource = SortedData(bigdata);
+            try
+            {
+                this.Name = Program.LocalizedString("SpectatorList");
+                this.Text = Program.LocalizedString("SpectatorList");
+                this.CenterToScreen();
+                var bigdata = Fetch.FetchJsonFromUrl<List<Match>>(URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), FifaCode));
+                dgSpectators.DataSource = SortedData(bigdata);
 
-            dgSpectators.Columns[0].Name = "Venue";
-            dgSpectators.Columns[1].Name = "Spectators";
-            dgSpectators.Columns[2].Name = "Home Team";
-            dgSpectators.Columns[3].Name = "Guest Team";
+                dgSpectators.Columns[0].HeaderText = Program.LocalizedString("Venue");
+                dgSpectators.Columns[1].HeaderText = Program.LocalizedString("Spectators");
+                dgSpectators.Columns[2].HeaderText = Program.LocalizedString("HomeTeam");
+                dgSpectators.Columns[3].HeaderText = Program.LocalizedString("GuestTeam");
 
-            int width = 0;
-            width += dgSpectators.Columns[0].Width;
-            width += dgSpectators.Columns[1].Width;
-            width += dgSpectators.Columns[2].Width;
-            width += dgSpectators.Columns[3].Width;
-            this.Width = width += 40;
+                int width = 0;
+                width += dgSpectators.Columns[0].Width;
+                width += dgSpectators.Columns[1].Width;
+                width += dgSpectators.Columns[2].Width;
+                width += dgSpectators.Columns[3].Width;
+                this.Width = width += 40;
+            }
+            catch (HttpStatusException ex)
+            {
+                MessageBox.Show(ex.Message, Program.LocalizedString("errorRequest"));
+                Application.Exit();
+            }
+            catch (JsonException ex)
+            {
+                MessageBox.Show(ex.Message, Program.LocalizedString("errorRequest"));
+                MessageBox.Show(ex.Message, Program.LocalizedString("errorJson"));
+                Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+                Application.Exit();
+            }
         }
 
         private object SortedData(List<Match> bigdata)

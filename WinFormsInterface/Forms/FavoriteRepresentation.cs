@@ -24,6 +24,7 @@ namespace WinFormsInterface
         {
             btFinish.Text = Program.LocalizedString("Finish");
             this.Text = Program.LocalizedString("FavoriteRepresentation");
+            this.Name = Program.LocalizedString("FavoriteRepresentation");
             try
             {
                 lbTooltip.Text = Program.LocalizedString("Fetching");

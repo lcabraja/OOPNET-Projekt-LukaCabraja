@@ -19,6 +19,11 @@ namespace WinFormsInterface
         {
             InitializeComponent();
             SetStyle(ControlStyles.StandardClick, true);
+
+            this.tsMoveTo.Text = Program.LocalizedString("Move");
+            this.tsToFavorites.Text = Program.LocalizedString("toFavorites");
+            this.tsToOther.Text = Program.LocalizedString("toOthers");
+            this.tsAddPicture.Text = Program.LocalizedString("AddPicture");
         }
 
         internal delegate void UpdateImage(Image image, long shirtNumber);
@@ -107,7 +112,7 @@ namespace WinFormsInterface
                     var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
                     var downloads = home + "\\Downloads";
                     fileDialog.InitialDirectory = downloads;
-                    fileDialog.Filter = "Image Files (*.png, *.jpg, *jpeg)|*.jp*g;*.png|All files (*.*)|*.*";
+                    fileDialog.Filter = $"{Program.LocalizedString("ImageFiles")} (*.png, *.jpg, *jpeg)|*.jp*g;*.png|{Program.LocalizedString("Allfiles")} (*.*)|*.*";
                     fileDialog.FilterIndex = 1;
                     fileDialog.RestoreDirectory = true;
                     if (fileDialog.ShowDialog() == DialogResult.OK)
@@ -128,7 +133,7 @@ namespace WinFormsInterface
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Unable to set player icon.");
+                    MessageBox.Show(ex.Message, Program.LocalizedString("IconSetError"));
                 }
             }
         }

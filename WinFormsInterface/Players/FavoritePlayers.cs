@@ -28,6 +28,7 @@ namespace WinFormsInterface
 
         private async void FavoritePlayers_Load(object sender, EventArgs e)
         {
+            tsMenuRankedSpectators.Text = Program.LocalizedString("SpectatorList");
             tsMenuRankedList.Text = Program.LocalizedString("RankedList");
             tsMenuSettings.Text = Program.LocalizedString("Settings");
             this.Text = Program.LocalizedString("FavoritePlayers");
@@ -198,7 +199,7 @@ namespace WinFormsInterface
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Could not save positions...");
+                MessageBox.Show(ex.Message, Program.LocalizedString("PositionSaveError"));
             }
         }
 
