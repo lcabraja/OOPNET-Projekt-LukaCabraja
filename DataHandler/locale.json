@@ -154,5 +154,9 @@
   "AddPicture": {
     "hr": "Dodaj sliku",
     "en": "Add Picture"
+  },
+  "NoMatchFound": {
+    "hr": "Nije pronadjena utakmica izmedju ova 2 tima.",
+    "en": "No game found with these two teams."
   }
 }

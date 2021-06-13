@@ -23,6 +23,9 @@ namespace WinFormsInterface
             this.players = players;
             FifaCode = fifaCode;
             InitializeComponent();
+            this.tsMenuPrint.Click += tsMenuPrint_Click;
+            this.tsMenuPageSetup.Click += tsMenuPageSetup_Click;
+            this.tsMenuPreview.Click += tsMenuPreview_Click;
         }
 
         private async void RankedList_Load(object sender, EventArgs e)
@@ -86,6 +89,30 @@ namespace WinFormsInterface
             }
 
             return sortedResults;
+        }
+        private void printDocument1_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+        {
+            int height = dgRanks.Height;
+            dgRanks.Height = dgRanks.RowCount * dgRanks.Rows[1].Height;
+            var bitmap = new Bitmap(this.dgRanks.Width, this.dgRanks.Height);
+            dgRanks.DrawToBitmap(bitmap, new Rectangle(0, 0, this.dgRanks.Width, this.dgRanks.Height));
+            dgRanks.Height = height;
+
+            e.Graphics.DrawImage(bitmap, new Point(e.MarginBounds.X, e.MarginBounds.Y));
+        }
+
+        private void tsMenuPrint_Click(object sender, System.EventArgs e)
+        {
+            printDialog1.ShowDialog();
+        }
+        private void tsMenuPageSetup_Click(object sender, System.EventArgs e)
+        {
+            pageSetupDialog1.ShowDialog();
+        }
+        private void tsMenuPreview_Click(object sender, System.EventArgs e)
+        {
+            printPreviewDialog1.PrintPreviewControl.Zoom = 1;
+            printPreviewDialog1.ShowDialog();
         }
     }
 }
