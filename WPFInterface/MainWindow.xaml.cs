@@ -20,9 +20,21 @@ namespace WPFInterface
     /// </summary>
     public partial class MainWindow : Window
     {
+        private bool keepalive = false;
         public MainWindow()
         {
             InitializeComponent();
+            this.Closing += MainWindow_Closing;
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //base.OnClosing(e); pretty sure this is a recursion here
+
+            if (keepalive) return;
+
+            // Application.Exit() did in fact not exit the application, only the form.
+            Environment.Exit(0);
         }
     }
 }
