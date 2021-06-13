@@ -10,7 +10,7 @@ namespace WinFormsInterface
 {
     static class Program
     {
-        public const string BASE_DIR = "savedata";
+        public static string BASE_DIR = Path.GetTempPath();
         public static string USER { get { return BASE_DIR + "/user.json"; } }
         public static string REPRESENTATION { get { return BASE_DIR + "/rep.json"; } }
         public static string FEMALE_TEAMS { get { return BASE_DIR + "/f/"; } }
