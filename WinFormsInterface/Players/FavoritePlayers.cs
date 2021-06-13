@@ -57,7 +57,7 @@ namespace WinFormsInterface
                     }
                 }
 
-                players.ForEach(x =>
+                foreach (Player x in players)
                 {
                     PlayerControl playerControl;
                     if (x.PortraitPath != null)
@@ -65,6 +65,7 @@ namespace WinFormsInterface
                         try
                         {
                             Image portrait = Image.FromFile(x.PortraitPath);
+                            x.Portrait = portrait;
                             playerControl = PlayerControlFactory(x, portrait);
                         }
                         catch (Exception)
@@ -84,7 +85,7 @@ namespace WinFormsInterface
                     {
                         flOtherPlayers.Controls.Add(playerControl);
                     }
-                });
+                }
                 SortPlayers(flFavorites);
                 SortPlayers(flOtherPlayers);
             }
@@ -129,6 +130,7 @@ namespace WinFormsInterface
             //playerControl.MouseDown += new MouseEventHandler(PlayerControl_MouseDown); 
             //                      difference between += new MouseEventHandler(Method) and += Method ?
             playerControl.MouseDown += PlayerControl_MouseDown;
+            playerControl.updatePlayers += PlayerControl_UpdateImage;
             playerControl.Controls.Cast<Control>()
                                   .ToList()
                                   .ForEach(x => x.MouseDown += Control_MouseDown);
@@ -141,6 +143,18 @@ namespace WinFormsInterface
             playerControl.SetPlayerImage(portrait);
             return playerControl;
         }
+
+        private void PlayerControl_UpdateImage(Image image, long shirtnumber)
+        {
+            foreach (Player player in players)
+            {
+                if (player.ShirtNumber == shirtnumber)
+                {
+                    player.Portrait = image;
+                }
+            }
+        }
+
         private void Control_MouseDown(object sender, MouseEventArgs e)
         {
             Control control = sender as Control;
@@ -253,7 +267,7 @@ namespace WinFormsInterface
         }
         private void tsMenuRankedList_Click(object sender, EventArgs e)
         {
-            RankedList rankedList = new RankedList();
+            RankedList rankedList = new RankedList(players);
             rankedList.Show();
         }
     }

@@ -21,6 +21,9 @@ namespace WinFormsInterface
             SetStyle(ControlStyles.StandardClick, true);
         }
 
+        internal delegate void UpdateImage(Image image, long shirtNumber);
+        internal event UpdateImage updatePlayers;
+
         public DataHandler.Model.Player playerData;
         public bool isSelected = false;
 
@@ -35,6 +38,7 @@ namespace WinFormsInterface
         public PlayerControl(DataHandler.Model.Player playerData, Image playerPortrait) : this(playerData)
         {
             this.pbPlayerPortrait.Image = playerPortrait;
+            
         }
 
         public void SetPlayerImage(Image playerPortrait)
@@ -116,7 +120,9 @@ namespace WinFormsInterface
                         string destinationFile = destinationDirectory + $"/{playerData.ShirtNumber}.{fileDialog.FileName.Split('.').Last()}";
                         File.Copy(fileDialog.FileName, destinationFile, true);
                         this.playerData.PortraitPath = destinationFile;
-                        pbPlayerPortrait.Image = Image.FromFile(destinationFile);
+                        Image image = Image.FromFile(destinationFile);
+                        updatePlayers?.Invoke(image, playerData.ShirtNumber);
+                        pbPlayerPortrait.Image = image;
                         (this.FindForm() as FavoritePlayers).SaveState();
                     }
                 }
