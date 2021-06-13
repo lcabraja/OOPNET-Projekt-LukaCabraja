@@ -5,7 +5,112 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFInterface"
         mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
         Title="Startup" Height="450" Width="800">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <!--Language-->
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="0"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            >
+            <Label>
+                Language
+            </Label>
+            <RadioButton Margin="0 2 0 2" x:Name="rbLangEng">
+                English
+            </RadioButton>
+            <RadioButton Margin="0 2 0 2" x:Name="rbLangCro">
+                Hrvatski
+            </RadioButton>
+        </StackPanel>
+        <!--Representation Gender-->
+        <StackPanel
+            Grid.Row="0"
+            Grid.Column="1"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            >
+            <Label>
+                Representation
+            </Label>
+            <RadioButton Margin="0 2 0 2" x:Name="rbRepFem">
+                Female
+            </RadioButton>
+            <RadioButton Margin="0 2 0 2" x:Name="rbRepMale">
+                Male
+            </RadioButton>
+        </StackPanel>
+        <!--Representation-->
+        <StackPanel
+            x:Name="spRepresentation"
+            Grid.Row="1"
+            Grid.Column="0"
+            IsEnabled="False"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            >
+            <Label 
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+            >
+                Representation
+            </Label>
+            <ComboBox
+                x:Name="cbRepresentation"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Center"
+                MinWidth="100"
+            >
+            </ComboBox>
+            <Label x:Name="lbLoadingRepresentation">
+            </Label>
+        </StackPanel>
+        <!--Screen Size-->
+        <StackPanel
+            x:Name="spScreensize"
+            Grid.Row="1"
+            Grid.Column="1"
+            IsEnabled="False"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+        >
+            <Label
+                x:Name="label4"
+                Grid.Row="0"
+                >Screen Size</Label>
+            <RadioButton Margin="0 2 0 2" x:Name="rbSizeFullscreen">
+                Fullscreen
+            </RadioButton>
+            <RadioButton Margin="0 2 0 2" x:Name="rbSize720p">
+                1280x720
+            </RadioButton>
+            <RadioButton Margin="0 2 0 2" x:Name="rbSize480p">
+                854x480
+            </RadioButton>
+            <RadioButton Margin="0 2 0 2" x:Name="rbSize360p">
+                640x360
+            </RadioButton>
+        </StackPanel>
+        <Button
+            x:Name="btContinue"
+            Grid.Column="1"
+            Grid.Row="2"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            Padding="10"
+            >
+            Continue
+        </Button>
     </Grid>
 </Window>
