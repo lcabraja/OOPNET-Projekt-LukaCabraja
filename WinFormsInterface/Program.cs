@@ -56,7 +56,6 @@ namespace WinFormsInterface
             //where do i save files? => appdata
             //TODO: Do the ranked lists need to be able to be sorted?
             //TODO: printing
-            //TODO: localization
         }
 
         internal static void UpdateUser(UserSettings user)
