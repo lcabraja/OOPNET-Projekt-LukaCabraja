@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataHandler", "DataHandler\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsInterface", "WinFormsInterface\WinFormsInterface.csproj", "{118A66B1-6919-4B32-ABA8-686EC4B0E3B6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPFInterface", "WPFInterface\WPFInterface.csproj", "{D73DF4D8-3E7D-4388-9EEB-5AD6A1BA7FC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{118A66B1-6919-4B32-ABA8-686EC4B0E3B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{118A66B1-6919-4B32-ABA8-686EC4B0E3B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{118A66B1-6919-4B32-ABA8-686EC4B0E3B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D73DF4D8-3E7D-4388-9EEB-5AD6A1BA7FC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D73DF4D8-3E7D-4388-9EEB-5AD6A1BA7FC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D73DF4D8-3E7D-4388-9EEB-5AD6A1BA7FC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D73DF4D8-3E7D-4388-9EEB-5AD6A1BA7FC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
