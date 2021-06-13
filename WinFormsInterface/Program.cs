@@ -41,7 +41,7 @@ namespace WinFormsInterface
                 }
                 UpdateLocale();
                 tryFifa_code();
-                //Application.Run(new FavoriteRepresentation());
+                Application.Run(new FavoriteRepresentation());
                 Application.Run(new FavoritePlayers());
             }
             catch (Exception ex)
