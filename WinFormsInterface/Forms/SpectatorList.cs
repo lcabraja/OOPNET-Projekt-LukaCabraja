@@ -21,14 +21,14 @@ namespace WinFormsInterface
             InitializeComponent();
         }
 
-        private void SpectatorList_Load(object sender, EventArgs e)
+        private async void SpectatorList_Load(object sender, EventArgs e)
         {
             try
             {
                 this.Name = Program.LocalizedString("SpectatorList");
                 this.Text = Program.LocalizedString("SpectatorList");
                 this.CenterToScreen();
-                var bigdata = Fetch.FetchJsonFromUrl<List<Match>>(URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), FifaCode));
+                var bigdata = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), FifaCode));
                 dgSpectators.DataSource = SortedData(bigdata);
 
                 dgSpectators.Columns[0].HeaderText = Program.LocalizedString("Venue");

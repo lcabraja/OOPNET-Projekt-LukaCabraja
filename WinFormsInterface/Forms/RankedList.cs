@@ -25,14 +25,14 @@ namespace WinFormsInterface
             InitializeComponent();
         }
 
-        private void RankedList_Load(object sender, EventArgs e)
+        private async void RankedList_Load(object sender, EventArgs e)
         {
             try
             {
                 this.Name = Program.LocalizedString("RankedList");
                 this.Text = Program.LocalizedString("RankedList");
 
-                var bigdata = Fetch.FetchJsonFromUrl<List<Match>>(URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), FifaCode));
+                var bigdata = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), FifaCode));
                 dgRanks.DataSource = SortedData(bigdata);
 
                 dgRanks.Columns[0].HeaderText = Program.LocalizedString("playerPortrait");
