@@ -10,11 +10,11 @@ namespace WinFormsInterface
 {
     static class Program
     {
-        public static string BASE_DIR = Path.GetTempPath();
-        public static string USER { get { return BASE_DIR + "/user.json"; } }
-        public static string REPRESENTATION { get { return BASE_DIR + "/rep.json"; } }
-        public static string FEMALE_TEAMS { get { return BASE_DIR + "/f/"; } }
-        public static string MALE_TEAMS { get { return BASE_DIR + "/m/"; } }
+        public static string BASE_DIR = Path.Join(Path.GetTempPath() + "OOPNET-LC");
+        public static string USER { get { return BASE_DIR + "\\user.json"; } }
+        public static string REPRESENTATION { get { return BASE_DIR + "\\rep.json"; } }
+        public static string FEMALE_TEAMS { get { return BASE_DIR + "\\f\\"; } }
+        public static string MALE_TEAMS { get { return BASE_DIR + "\\m\\"; } }
         public static UserSettings userSettings { get; set; }
         public static TeamResult lastTeam { get; set; }
         public static Localizer localizer { get; private set; }
