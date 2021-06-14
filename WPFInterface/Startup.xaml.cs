@@ -41,6 +41,7 @@ namespace WPFInterface
         private List<Match> lastMatch = null;
         private string lastFifaCode = string.Empty;
         private bool isGuestTeamSelected = false;
+        private int isSetToInit = 0;
         // ===================================================================================== Constructor & Loaded
         public Startup()
         {
@@ -79,12 +80,9 @@ namespace WPFInterface
                 cachedLanguage = App.userSettings.SavedLanguage;
                 cachedLeague = App.userSettings.SavedLeague;
             }
+
             UpdateRadioLang();
             updateRadioRep();
-            if (App.lastTeam != null)
-            {
-                cbRepresentation.SelectedItem = $"{App.lastTeam.Country} ({App.lastTeam.FifaCode})"; ;
-            }
         }
         // ===================================================================================== Language Radio 
         private void rbLang_Checked(object sender, RoutedEventArgs e)
@@ -241,7 +239,6 @@ namespace WPFInterface
                     {
                         lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
                         MessageBox.Show(ex.Message, ex.GetType().Name);
-                        //Environment.Exit(ex.HResult);
                     }
                     catch (JsonException ex)
                     {
@@ -346,7 +343,6 @@ namespace WPFInterface
             {
                 lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
                 MessageBox.Show(ex.Message, ex.GetType().Name);
-                //Environment.Exit(ex.HResult);
             }
             catch (JsonException ex)
             {
@@ -404,6 +400,7 @@ namespace WPFInterface
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error locating match");
+                MessageBox.Show(ex.Message, "Error locating match");
                 throw;
             }
             finally
@@ -416,34 +413,37 @@ namespace WPFInterface
             try
             {
                 string fifa_code = FindSelectedRepresentation(cbRepresentation)?.FifaCode;
+                if (fifa_code == null)
+                {
+                    if (App.lastTeam != null)
+                    {
+                        fifa_code = App.lastTeam.FifaCode;
+                    }
+                }
                 App.fifaCodeHome = fifa_code;
                 string fifa_code_guest = FindSelectedRepresentation(cbRepresentationGuest)?.FifaCode;
                 App.fifaCodeGuest = fifa_code_guest;
 
-                if (fifa_code != lastFifaCode)
+                string uri = App.CACHE + App.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + fifa_code + ".json"; //checked 1
+                if (File.Exists(uri))
                 {
-                    string uri = App.CACHE + App.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + fifa_code + ".json"; //checked 1
-                    if (File.Exists(uri))
-                    {
-                        lastMatch = await Fetch.FetchJsonFromFileAsync<List<Match>>(uri);
-                    }
-                    else
-                    {
-                        lastMatch = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), fifa_code));
-                        File.WriteAllText(uri, JsonConvert.SerializeObject(lastMatch));
-                    }
-
-                    List<string> playedAgainst = new List<string>();
-                    lastMatch.Where(x => x.AwayTeam.Code == fifa_code).Select(x => $"{x.HomeTeam.Country} ({x.HomeTeam.Code})").ToList().ForEach(playedAgainst.Add);
-                    lastMatch.Where(x => x.HomeTeam.Code == fifa_code).Select(x => $"{x.AwayTeam.Country} ({x.AwayTeam.Code})").ToList().ForEach(playedAgainst.Add);
-                    cbRepresentationGuest.ItemsSource = playedAgainst;
-                    lastFifaCode = fifa_code;
+                    lastMatch = await Fetch.FetchJsonFromFileAsync<List<Match>>(uri);
                 }
+                else
+                {
+                    lastMatch = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), fifa_code));
+                    File.WriteAllText(uri, JsonConvert.SerializeObject(lastMatch));
+                }
+
+                List<string> playedAgainst = new List<string>();
+                lastMatch.Where(x => x.AwayTeam.Code == fifa_code).Select(x => $"{x.HomeTeam.Country} ({x.HomeTeam.Code})").ToList().ForEach(playedAgainst.Add);
+                lastMatch.Where(x => x.HomeTeam.Code == fifa_code).Select(x => $"{x.AwayTeam.Country} ({x.AwayTeam.Code})").ToList().ForEach(playedAgainst.Add);
+                cbRepresentationGuest.ItemsSource = playedAgainst;
+                cbRepresentation.SelectedItem = $"{App.lastTeam.Country} ({fifa_code})"; ;
             }
             catch (HttpStatusException ex)
             {
                 MessageBox.Show(ex.Message, App.LocalizedString("errorRequest"));
-                //Environment.Exit(ex.HResult);
             }
             catch (JsonException ex)
             {
