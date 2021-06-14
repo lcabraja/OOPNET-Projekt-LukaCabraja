@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:WPFInterface"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
-    <Grid Margin="10">
+    <Grid Margin="10" x:Name="gridContainer">
         <Grid.Background>
-            <SolidColorBrush Color="Red"/>
+            <SolidColorBrush Color="White"/>
         </Grid.Background>
         <Label
             x:Name="lbName"

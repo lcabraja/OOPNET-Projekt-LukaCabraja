@@ -27,8 +27,18 @@ namespace WinFormsInterface
             this.Name = Program.LocalizedString("FavoriteRepresentation");
             try
             {
+                List<TeamResult> representations = null;
                 lbTooltip.Text = Program.LocalizedString("Fetching");
-                var representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(Program.userSettings.GenderedRepresentationUrl()));
+                string uri = Program.CACHE + Program.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + "TeamResult" + ".json"; // checked 1
+                if (File.Exists(uri))
+                {
+                    representations = await Fetch.FetchJsonFromFileAsync<List<TeamResult>>(uri);
+                }
+                else
+                {
+                    representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(Program.userSettings.GenderedRepresentationUrl()));
+                    File.WriteAllText(uri, JsonConvert.SerializeObject(representations));
+                }
 
                 teams = representations;
                 cbRepresentation.DataSource = representations.OrderBy(x => x.FifaCode)

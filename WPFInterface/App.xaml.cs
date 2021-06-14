@@ -20,6 +20,7 @@ namespace WPFInterface
         public static string USER { get { return BASE_DIR + "\\user.json"; } }
         public static string SIZE { get { return BASE_DIR + "\\size.json"; } }
         public static string REPRESENTATION { get { return BASE_DIR + "\\rep.json"; } }
+        public static string CACHE { get { return BASE_DIR + "\\cache\\"; } }
         public static string FEMALE_TEAMS { get { return BASE_DIR + "\\f\\"; } }
         public static string MALE_TEAMS { get { return BASE_DIR + "\\m\\"; } }
         public static UserSettings userSettings { get; set; }
@@ -30,13 +31,18 @@ namespace WPFInterface
         public static Localizer localizer { get; private set; }
         internal static bool firstOnboarding = true;
         internal static UserSettings.Language defaultLocale = UserSettings.Language.English;
+
+        internal static string fifaCodeHome = null;
+        internal static string fifaCodeGuest = null;
+
         void App_Startup(object sender, StartupEventArgs e)
         {
+            //MessageBox.Show(URL.F_BASE_URL.Substring(7).Replace('\\', '-').Replace('/', '-').Replace('/', '-'));
             PreparePaths();
             PrepareLocale();
             tryFifa_code();
             tryScreenSize_code();
-            isUserOnboarded = userOnboarded();
+            isUserOnboarded = userOnboarded();;
 
             Startup startup = new Startup();
             startup.ShowDialog();
@@ -136,6 +142,7 @@ namespace WPFInterface
                 Directory.CreateDirectory(BASE_DIR);
                 Directory.CreateDirectory(FEMALE_TEAMS);
                 Directory.CreateDirectory(MALE_TEAMS);
+                Directory.CreateDirectory(CACHE);
             }
             catch (Exception ex)
             {

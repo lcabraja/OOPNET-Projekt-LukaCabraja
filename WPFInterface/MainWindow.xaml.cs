@@ -3,6 +3,7 @@ using DataHandler.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,6 @@ namespace WPFInterface
 
         private bool keepalive = false;
         private List<TeamResult> teamResults;
-        private Image defaultImage;
         public MainWindow()
         {
             InitializeComponent();
@@ -37,29 +37,70 @@ namespace WPFInterface
         {
             SetRepresentationLabels();
             LoadPlayers();
-            this.lbNaziv.Content = System.IO.Path.GetFullPath(@"Resources\field-horizontal.png");
-            //defaultImage = Image. Properties.Resources.defaultpicture;
+            gridWhole.Background = new ImageBrush(new BitmapImage(new Uri(System.IO.Path.GetFullPath(@"field-horizontal.png"))));
         }
 
         private async void LoadPlayers()
         {
-            string FifaCode = App.lastTeam.FifaCode;
-            List<Match> bigdata = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), FifaCode));
-            List<Player> playersHome = new List<Player>();
-            List<Player> playersGuest = new List<Player>();
-
-            var team = bigdata.Find(x => x.HomeTeam.Code == FifaCode);
-            if (team == null)
+            try
             {
-                team = bigdata.Find(x => x.AwayTeam.Code == FifaCode);
-            }
-            team.AwayTeamStatistics.Substitutes.ForEach(playersGuest.Add);
-            team.AwayTeamStatistics.StartingEleven.ForEach(playersGuest.Add);
-            team.HomeTeamStatistics.StartingEleven.ForEach(playersHome.Add);
-            team.HomeTeamStatistics.Substitutes.ForEach(playersHome.Add);
+                List<Player> playersHome = new List<Player>();
+                List<Player> playersGuest = new List<Player>();
+                Match match = new Match();
+                string FifaCode = App.lastTeam.FifaCode;
 
-            playersGuest.ForEach(x => AddPlayerControl(x, gridGuest));
-            playersHome.ForEach(x => AddPlayerControl(x, gridHome));
+                List<Match> bigdata = null;
+                string uri = App.CACHE + App.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + App.fifaCodeHome + ".json"; //checked 1
+                if (File.Exists(uri))
+                {
+                    bigdata = await Fetch.FetchJsonFromFileAsync<List<Match>>(uri);
+                }
+                else
+                {
+                    bigdata = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), App.fifaCodeHome));
+                    File.WriteAllText(uri, JsonConvert.SerializeObject(bigdata));
+                }
+
+                match = bigdata.Find(x => 
+                    (x.HomeTeam.Code == App.fifaCodeHome && x.AwayTeam.Code == App.fifaCodeGuest) || 
+                    (x.HomeTeam.Code == App.fifaCodeGuest && x.AwayTeam.Code == App.fifaCodeHome)
+                );
+                
+                match.AwayTeamStatistics.Substitutes.ForEach(playersGuest.Add);
+                match.AwayTeamStatistics.StartingEleven.ForEach(playersGuest.Add);
+                match.HomeTeamStatistics.StartingEleven.ForEach(playersHome.Add);
+                match.HomeTeamStatistics.Substitutes.ForEach(playersHome.Add);
+
+                string pathHome = App.userSettings.GenderedRepresentationFilePath() + App.fifaCodeHome + ".json";
+                if (File.Exists(pathHome))
+                {
+                    playersHome = await Fetch.FetchJsonFromFileAsync<List<Player>>(pathHome);
+                }
+                string pathGuest = App.userSettings.GenderedRepresentationFilePath() + App.fifaCodeGuest + ".json";
+                if (File.Exists(pathGuest))
+                {
+                    playersGuest = await Fetch.FetchJsonFromFileAsync<List<Player>>(pathGuest);
+                }
+
+                playersGuest.ForEach(x => AddPlayerControl(x, gridGuest));
+                playersHome.ForEach(x => AddPlayerControl(x, gridHome));
+            }
+            catch (HttpStatusException ex)
+            {
+                MessageBox.Show(ex.Message, App.LocalizedString("errorRequest"));
+                //Environment.Exit(ex.HResult);
+            }
+            catch (JsonException ex)
+            {
+                MessageBox.Show(ex.Message, App.LocalizedString("errorRequest"));
+                MessageBox.Show(ex.Message, App.LocalizedString("errorJson"));
+                Environment.Exit(ex.HResult);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, ex.GetType().Name);
+                Environment.Exit(ex.HResult);
+            }
         }
         private void AddPlayerControl(Player player, Grid grid)
         {

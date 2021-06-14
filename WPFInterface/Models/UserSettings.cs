@@ -39,9 +39,9 @@ namespace WPFInterface
             switch (SavedLeague)
             {
                 case League.Female:
-                    //return Program.FEMALE_TEAMS;
+                    return App.FEMALE_TEAMS;
                 case League.Male:
-                    //return Program.MALE_TEAMS;
+                    return App.MALE_TEAMS;
                 default:
                     throw new Exception("Unsupported league selected");
             }

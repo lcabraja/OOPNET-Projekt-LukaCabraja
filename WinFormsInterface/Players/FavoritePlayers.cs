@@ -44,8 +44,19 @@ namespace WinFormsInterface
                 }
                 else
                 {
-                    var url = URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), Program.lastTeam.FifaCode);
-                    match = (await Fetch.FetchJsonFromUrlAsync<List<Match>>(url)).First();
+                    List<Match> cache_matches = null;
+                    string uri = Program.CACHE + Program.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + Program.lastTeam.FifaCode + ".json"; //checked 1
+                    if (File.Exists(uri))
+                    {
+                        cache_matches = await Fetch.FetchJsonFromFileAsync<List<Match>>(uri);
+                    }
+                    else
+                    {
+                        cache_matches = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), Program.lastTeam.FifaCode));
+                        File.WriteAllText(uri, JsonConvert.SerializeObject(cache_matches));
+                    }
+                    match = cache_matches.First();
+
                     if (match.HomeTeam.Code == Program.lastTeam.FifaCode)
                     {
                         match.HomeTeamStatistics.StartingEleven.ForEach(players.Add);

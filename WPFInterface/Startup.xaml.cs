@@ -40,6 +40,7 @@ namespace WPFInterface
         private bool isWithinSetup = false;
         private List<Match> lastMatch = null;
         private string lastFifaCode = string.Empty;
+        private bool isGuestTeamSelected = false;
         // ===================================================================================== Constructor & Loaded
         public Startup()
         {
@@ -288,7 +289,17 @@ namespace WPFInterface
                     case UserSettings.League.Female:
                         if (!isDataFetchedF)
                         {
-                            representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(URL.F_BASE_URL));
+                            string uri = App.CACHE + URL.Teams(URL.F_BASE_URL).Substring(7).Replace('\\', '-').Replace('/', '-') + "TeamResult" + ".json"; //checked 1
+                            if (File.Exists(uri))
+                            {
+                                representations = await Fetch.FetchJsonFromFileAsync<List<TeamResult>>(uri);
+                            }
+                            else
+                            {
+                                representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(URL.F_BASE_URL));
+                                File.WriteAllText(uri, JsonConvert.SerializeObject(representations));
+                            }
+
                             cachedRepresentaionF = representations;
                             isDataFetchedF = true;
                         }
@@ -301,7 +312,17 @@ namespace WPFInterface
                     case UserSettings.League.Male:
                         if (!isDataFetchedM)
                         {
-                            representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(URL.M_BASE_URL));
+                            string uri = App.CACHE + URL.Teams(URL.M_BASE_URL).Substring(7).Replace('\\', '-').Replace('/', '-') + "TeamResult" + ".json"; //checked2
+                            if (File.Exists(uri))
+                            {
+                                representations = await Fetch.FetchJsonFromFileAsync<List<TeamResult>>(uri);
+                            }
+                            else
+                            {
+                                representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(URL.M_BASE_URL));
+                                File.WriteAllText(uri, JsonConvert.SerializeObject(representations));
+                            }
+
                             cachedRepresentaionM = representations;
                             isDataFetchedM = true;
                         }
@@ -358,7 +379,9 @@ namespace WPFInterface
                 cbRepresentation.SelectionChanged -= CbRepresentationGuest_SelectionChanged;
                 string score = null;
                 string fifa_code = FindSelectedRepresentation(cbRepresentation)?.FifaCode;
+                App.fifaCodeHome = fifa_code;
                 string fifa_code_guest = FindSelectedRepresentation(cbRepresentationGuest)?.FifaCode;
+                App.fifaCodeGuest = fifa_code_guest;
 
                 var m = lastMatch?.Find(x => (x.AwayTeam.Code == fifa_code && x.HomeTeam.Code == fifa_code_guest) ||
                                 (x.AwayTeam.Code == fifa_code_guest && x.HomeTeam.Code == fifa_code));
@@ -372,26 +395,43 @@ namespace WPFInterface
                         $"{(fifa_code == m.HomeTeam.Code ? m.HomeTeam.Goals : m.AwayTeam.Goals)}";
                 }
                 lbScore.Content = score ?? App.LocalizedString("NoMatchFound");
-                cbRepresentation.SelectionChanged += CbRepresentationGuest_SelectionChanged;
+                if (!isGuestTeamSelected)
+                {
+                    btContinue.IsEnabled = true;
+                }
+                isGuestTeamSelected = true;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Error locating match");
                 throw;
             }
+            finally
+            {
+                cbRepresentation.SelectionChanged += CbRepresentationGuest_SelectionChanged;
+            }
         }
         private async void UpdateGuest()
         {
-            lbScore.Content = "Fetching...";
             try
             {
                 string fifa_code = FindSelectedRepresentation(cbRepresentation)?.FifaCode;
+                App.fifaCodeHome = fifa_code;
                 string fifa_code_guest = FindSelectedRepresentation(cbRepresentationGuest)?.FifaCode;
+                App.fifaCodeGuest = fifa_code_guest;
 
                 if (fifa_code != lastFifaCode)
                 {
-                    var url = URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), fifa_code);
-                    lastMatch = await Fetch.FetchJsonFromUrlAsync<List<Match>>(url);
+                    string uri = App.CACHE + App.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + fifa_code + ".json"; //checked 1
+                    if (File.Exists(uri))
+                    {
+                        lastMatch = await Fetch.FetchJsonFromFileAsync<List<Match>>(uri);
+                    }
+                    else
+                    {
+                        lastMatch = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), fifa_code));
+                        File.WriteAllText(uri, JsonConvert.SerializeObject(lastMatch));
+                    }
 
                     List<string> playedAgainst = new List<string>();
                     lastMatch.Where(x => x.AwayTeam.Code == fifa_code).Select(x => $"{x.HomeTeam.Country} ({x.HomeTeam.Code})").ToList().ForEach(playedAgainst.Add);

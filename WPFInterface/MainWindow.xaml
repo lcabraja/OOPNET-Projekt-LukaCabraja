@@ -32,9 +32,9 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Grid.Background>
+            <!--<Grid.Background>
                 <ImageBrush ImageSource="C:\Users\lcabraja\source\repos\lcabraja\OOPNET-Projekt-LukaCabraja\WPFInterface\field-horizontal.png" />
-            </Grid.Background>
+            </Grid.Background>-->
 
             <Grid x:Name="gridHome" Grid.Column="0">
                 <Grid.ColumnDefinitions>

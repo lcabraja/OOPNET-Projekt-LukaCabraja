@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -35,7 +36,17 @@ namespace WinFormsInterface
                 this.Name = Program.LocalizedString("RankedList");
                 this.Text = Program.LocalizedString("RankedList");
 
-                var bigdata = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), FifaCode));
+                List<Match> bigdata = null;
+                string uri = Program.CACHE + Program.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + FifaCode + ".json"; //checked 1
+                if (File.Exists(uri))
+                {
+                    bigdata = await Fetch.FetchJsonFromFileAsync<List<Match>>(uri);
+                }
+                else
+                {
+                    bigdata = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(Program.userSettings.GenderedRepresentationUrl(), FifaCode));
+                    File.WriteAllText(uri, JsonConvert.SerializeObject(bigdata));
+                }
                 dgRanks.DataSource = SortedData(bigdata);
 
                 dgRanks.Columns[0].HeaderText = Program.LocalizedString("playerPortrait");

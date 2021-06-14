@@ -31,6 +31,11 @@ namespace WPFInterface
         {
             this.lbName.Content = player1.Name;
             this.lbNumber.Content = player1.ShirtNumber;
+            this.gridContainer.Background = 
+                new ImageBrush(
+                    new BitmapImage(
+                        new Uri(player1.PortraitPath ?? System.IO.Path.GetFullPath("defaultpicture.jpg")
+                )));
         }
     }
 }

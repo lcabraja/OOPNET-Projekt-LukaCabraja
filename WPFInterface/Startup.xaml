@@ -146,6 +146,7 @@
             </Label>
         </StackPanel>-->
         <Button
+            IsEnabled="False"
             x:Name="btContinue"
             Grid.Column="1"
             Grid.Row="2"
