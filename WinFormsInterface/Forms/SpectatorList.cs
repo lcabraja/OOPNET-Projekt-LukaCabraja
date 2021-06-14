@@ -24,13 +24,17 @@ namespace WinFormsInterface
             this.tsMenuPageSetup.Click += tsMenuPageSetup_Click;
             this.tsMenuPreview.Click += tsMenuPreview_Click;
         }
-
         private async void SpectatorList_Load(object sender, EventArgs e)
         {
             try
             {
                 this.Name = Program.LocalizedString("SpectatorList");
                 this.Text = Program.LocalizedString("SpectatorList");
+
+                this.tsMenuPrint.Text = Program.LocalizedString("tsMenuPrint");
+                this.tsMenuPageSetup.Text = Program.LocalizedString("tsMenuPageSetup");
+                this.tsMenuPreview.Text = Program.LocalizedString("tsMenuPreview");
+
                 this.CenterToScreen();
 
                 List<Match> bigdata = null;
@@ -75,7 +79,6 @@ namespace WinFormsInterface
                 Application.Exit();
             }
         }
-
         private object SortedData(List<Match> bigdata)
         {
             var spectatorData = new List<SortedSpectator>();

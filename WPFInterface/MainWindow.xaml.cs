@@ -44,6 +44,14 @@ namespace WPFInterface
         {
             try
             {
+                if (App.screenSize != null)
+                {
+                    this.RenderSize = App.screenSize.GetSize();
+                    if (App.screenSize.ChosenSize == 0)
+                    {
+                        this.WindowState = WindowState.Maximized;
+                    }
+                }
                 List<Player> playersHome = new List<Player>();
                 List<Player> playersGuest = new List<Player>();
                 Match match = new Match();
@@ -66,10 +74,8 @@ namespace WPFInterface
                     (x.HomeTeam.Code == App.fifaCodeGuest && x.AwayTeam.Code == App.fifaCodeHome)
                 );
                 
-                match.AwayTeamStatistics.Substitutes.ForEach(playersGuest.Add);
                 match.AwayTeamStatistics.StartingEleven.ForEach(playersGuest.Add);
                 match.HomeTeamStatistics.StartingEleven.ForEach(playersHome.Add);
-                match.HomeTeamStatistics.Substitutes.ForEach(playersHome.Add);
 
                 string pathHome = App.userSettings.GenderedRepresentationFilePath() + App.fifaCodeHome + ".json";
                 if (File.Exists(pathHome))

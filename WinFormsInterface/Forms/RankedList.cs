@@ -36,6 +36,10 @@ namespace WinFormsInterface
                 this.Name = Program.LocalizedString("RankedList");
                 this.Text = Program.LocalizedString("RankedList");
 
+                this.tsMenuPrint.Text = Program.LocalizedString("tsMenuPrint");
+                this.tsMenuPageSetup.Text = Program.LocalizedString("tsMenuPageSetup");
+                this.tsMenuPreview.Text = Program.LocalizedString("tsMenuPreview");
+
                 List<Match> bigdata = null;
                 string uri = Program.CACHE + Program.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + FifaCode + ".json"; //checked 1
                 if (File.Exists(uri))

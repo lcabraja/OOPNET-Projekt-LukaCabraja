@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Windows;
 using System.Text;
 
 namespace WPFInterface
@@ -11,11 +11,19 @@ namespace WPFInterface
         public int ChosenSize { get; set; }
         public Size GetSize()
         {
+
             switch(ChosenSize)
             {
-
-                default:
+                case 10:
                     return new Size(1280, 720);
+                    break;
+                case 20:
+                    return new Size(854, 480);
+                    break;
+                case 30:
+                    return new Size(640, 360);
+                default:
+                    return new Size(1920, 1080);
             }
         }
 

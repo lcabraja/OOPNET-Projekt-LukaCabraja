@@ -158,5 +158,17 @@
   "NoMatchFound": {
     "hr": "Nije pronadjena utakmica izmedju ova 2 tima.",
     "en": "No game found with these two teams."
+  },
+  "tsMenuPrint": {
+    "hr": "Printaj",
+    "en": "Print"
+  },
+  "tsMenuPageSetup": {
+    "hr": "Postavke stranice",
+    "en": "Page setup"
+  },
+  "tsMenuPreview": {
+    "hr": "Pregled ispisa",
+    "en": "Print Preview"
   }
 }
