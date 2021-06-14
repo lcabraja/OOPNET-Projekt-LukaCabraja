@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -29,7 +30,7 @@ namespace WPFInterface
         private bool isLanguagePicked = false;
         private UserSettings.League cachedLeague;
         private bool isRepresentationPicked = false;
-        private int cachedResolution;
+        private int cachedScreensize;
         private bool isScreenPicked = false;
         private bool isSelfUpdate = false;
         private List<TeamResult> cachedRepresentaionF = null;
@@ -61,8 +62,10 @@ namespace WPFInterface
 
             cbRepresentation.DropDownClosed += CbRepresentation_DropDownClosed;
             cbRepresentationGuest.DropDownClosed += CbRepresentationGuest_DropDownClosed;
-
+            cbRepresentation.SelectionChanged += CbRepresentation_SelectionChanged;
+            cbRepresentationGuest.SelectionChanged += CbRepresentationGuest_SelectionChanged;
         }
+
         private void Startup_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeLocals();
@@ -144,10 +147,6 @@ namespace WPFInterface
         }
         private void updateRadioRep()
         {
-            if (isRepresentationPicked)
-            {
-                btUpdateRepresentation.IsEnabled = true;
-            }
             isSelfUpdate = true;
             rbRepFem.IsChecked = false;
             rbRepMale.IsChecked = false;
@@ -173,19 +172,19 @@ namespace WPFInterface
                 {
                     if (rbSelected == rbSizeFullscreen)
                     {
-                        cachedResolution = 0;
+                        cachedScreensize = 0;
                     }
                     if (rbSelected == rbSize720p)
                     {
-                        cachedResolution = 10;
+                        cachedScreensize = 10;
                     }
                     if (rbSelected == rbSize480p)
                     {
-                        cachedResolution = 20;
+                        cachedScreensize = 20;
                     }
                     if (rbSelected == rbSize360p)
                     {
-                        cachedResolution = 30;
+                        cachedScreensize = 30;
                     }
                     updateRadioResolution();
                 }
@@ -199,19 +198,19 @@ namespace WPFInterface
             rbSize720p.IsChecked = false;
             rbSize480p.IsChecked = false;
             rbSize360p.IsChecked = false;
-            if (cachedResolution == 0)
+            if (cachedScreensize == 0)
             {
                 rbSizeFullscreen.IsChecked = true;
             }
-            if (cachedResolution == 10)
+            if (cachedScreensize == 10)
             {
                 rbSize720p.IsChecked = true;
             }
-            if (cachedResolution == 20)
+            if (cachedScreensize == 20)
             {
                 rbSize480p.IsChecked = true;
             }
-            if (cachedResolution == 30)
+            if (cachedScreensize == 30)
             {
                 rbSize360p.IsChecked = true;
             }
@@ -269,8 +268,11 @@ namespace WPFInterface
 
 
                 updateComboBoxes();
-                cachedResolution = App.screenSize.ChosenSize;
-                updateRadioResolution();
+                if (App.isScreensizeSet)
+                {
+                    cachedScreensize = App.screenSize.ChosenSize;
+                    updateRadioResolution();
+                }
 
                 isWithinSetup = false;
             }
@@ -314,7 +316,8 @@ namespace WPFInterface
                 }
                 var selectedReps = representations.OrderBy(x => x.FifaCode).Select(x => $"{x.Country} ({x.FifaCode})").ToList();
                 cbRepresentation.ItemsSource = selectedReps;
-                cbRepresentationGuest.ItemsSource = selectedReps;
+                //cbRepresentationGuest.ItemsSource = selectedReps;
+                UpdateGuest();
                 cbRepresentation.SelectedIndex = 0;
                 lbLoadingRepresentation.Content = App.LocalizedString("Done");
             }
@@ -338,31 +341,26 @@ namespace WPFInterface
             }
         }
         // ===================================================================================== ComboBox Handlers
-        private void btUpdateRepresentation_Click(object sender, RoutedEventArgs e)
-        {
-            updateComboBoxes();
-            btUpdateRepresentation.IsEnabled = false;
-        }
         private void CbRepresentation_DropDownClosed(object sender, EventArgs e)
         {
-
         }
-        private async void CbRepresentationGuest_DropDownClosed(object sender, EventArgs e)
+        private void CbRepresentationGuest_DropDownClosed(object sender, EventArgs e)
         {
-            string score = null;
-            lbScore.Content = "Fetching...";
+        }
+        private void CbRepresentation_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateGuest();
+        }
+        private void CbRepresentationGuest_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
             try
             {
-                string fifa_code = FindSelectedRepresentation(cbRepresentation).FifaCode;
-                string fifa_code_guest = FindSelectedRepresentation(cbRepresentationGuest).FifaCode;
+                cbRepresentation.SelectionChanged -= CbRepresentationGuest_SelectionChanged;
+                string score = null;
+                string fifa_code = FindSelectedRepresentation(cbRepresentation)?.FifaCode;
+                string fifa_code_guest = FindSelectedRepresentation(cbRepresentationGuest)?.FifaCode;
 
-                if (fifa_code != lastFifaCode)
-                {
-                    var url = URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), fifa_code);
-                    lastMatch = await Fetch.FetchJsonFromUrlAsync<List<Match>>(url);
-                }
-                lastFifaCode = fifa_code;
-                var m = lastMatch.Find(x => (x.AwayTeam.Code == fifa_code && x.HomeTeam.Code == fifa_code_guest) ||
+                var m = lastMatch?.Find(x => (x.AwayTeam.Code == fifa_code && x.HomeTeam.Code == fifa_code_guest) ||
                                 (x.AwayTeam.Code == fifa_code_guest && x.HomeTeam.Code == fifa_code));
                 if (m == null)
                 {
@@ -373,7 +371,34 @@ namespace WPFInterface
                     score = $"{(fifa_code == m.HomeTeam.Code ? m.HomeTeam.Goals : m.AwayTeam.Goals)} : " +
                         $"{(fifa_code == m.HomeTeam.Code ? m.HomeTeam.Goals : m.AwayTeam.Goals)}";
                 }
+                lbScore.Content = score ?? App.LocalizedString("NoMatchFound");
+                cbRepresentation.SelectionChanged += CbRepresentationGuest_SelectionChanged;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error locating match");
+                throw;
+            }
+        }
+        private async void UpdateGuest()
+        {
+            lbScore.Content = "Fetching...";
+            try
+            {
+                string fifa_code = FindSelectedRepresentation(cbRepresentation)?.FifaCode;
+                string fifa_code_guest = FindSelectedRepresentation(cbRepresentationGuest)?.FifaCode;
 
+                if (fifa_code != lastFifaCode)
+                {
+                    var url = URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), fifa_code);
+                    lastMatch = await Fetch.FetchJsonFromUrlAsync<List<Match>>(url);
+
+                    List<string> playedAgainst = new List<string>();
+                    lastMatch.Where(x => x.AwayTeam.Code == fifa_code).Select(x => $"{x.HomeTeam.Country} ({x.HomeTeam.Code})").ToList().ForEach(playedAgainst.Add);
+                    lastMatch.Where(x => x.HomeTeam.Code == fifa_code).Select(x => $"{x.AwayTeam.Country} ({x.AwayTeam.Code})").ToList().ForEach(playedAgainst.Add);
+                    cbRepresentationGuest.ItemsSource = playedAgainst;
+                    lastFifaCode = fifa_code;
+                }
             }
             catch (HttpStatusException ex)
             {
@@ -391,11 +416,8 @@ namespace WPFInterface
                 MessageBox.Show(ex.Message, ex.GetType().Name);
                 Environment.Exit(ex.HResult);
             }
-            finally
-            {
-                lbScore.Content = score ?? App.LocalizedString("NoMatchFound");
-            }
         }
+
         // ===================================================================================== Locals
         private void InitializeLocals()
         {
@@ -409,7 +431,7 @@ namespace WPFInterface
             try
             {
                 user = new UserSettings { SavedLanguage = cachedLanguage, SavedLeague = cachedLeague };
-                size = new ScreenSize { ChosenSize = cachedResolution };
+                size = new ScreenSize { ChosenSize = cachedScreensize };
                 App.UpdateUserSettings(user);
                 try
                 {
@@ -463,6 +485,8 @@ namespace WPFInterface
         }
         private TeamResult FindSelectedRepresentation(ComboBox dropdown)
         {
+            if (dropdown.SelectedItem == null)
+                return null;
             var fifa_code = dropdown.SelectedItem.ToString()
                                                          .Split(' ')
                                                          .Last()

@@ -50,12 +50,6 @@
             <RadioButton Margin="0 2 0 2" x:Name="rbRepMale">
                 Male
             </RadioButton>
-            <Button x:Name="btUpdateRepresentation"
-                    Click="btUpdateRepresentation_Click"
-                    IsEnabled="False"
-                    >
-                Update Representation
-            </Button>
         </StackPanel>
         <!--Representation-->
         <StackPanel
