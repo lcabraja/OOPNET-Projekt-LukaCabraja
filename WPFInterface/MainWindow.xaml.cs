@@ -37,6 +37,9 @@ namespace WPFInterface
         {
             SetRepresentationLabels();
             LoadPlayers();
+            var size = App.screenSize.GetSize();
+            this.Height = size.Height;
+            this.Width = size.Width;
             gridWhole.Background = new ImageBrush(new BitmapImage(new Uri(System.IO.Path.GetFullPath(@"field-horizontal.png"))));
         }
 
@@ -69,11 +72,11 @@ namespace WPFInterface
                     File.WriteAllText(uri, JsonConvert.SerializeObject(bigdata));
                 }
 
-                match = bigdata.Find(x => 
-                    (x.HomeTeam.Code == App.fifaCodeHome && x.AwayTeam.Code == App.fifaCodeGuest) || 
+                match = bigdata.Find(x =>
+                    (x.HomeTeam.Code == App.fifaCodeHome && x.AwayTeam.Code == App.fifaCodeGuest) ||
                     (x.HomeTeam.Code == App.fifaCodeGuest && x.AwayTeam.Code == App.fifaCodeHome)
                 );
-                
+
                 match.AwayTeamStatistics.StartingEleven.ForEach(playersGuest.Add);
                 match.HomeTeamStatistics.StartingEleven.ForEach(playersHome.Add);
 

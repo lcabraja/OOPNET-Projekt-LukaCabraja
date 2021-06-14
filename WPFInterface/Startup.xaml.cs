@@ -103,20 +103,20 @@ namespace WPFInterface
                     isLanguagePicked = true;
                 }
             }
-            isSelfUpdate = false;
         }
         private void UpdateRadioLang()
         {
-            isSelfUpdate = true;
             rbLangCro.IsChecked = false;
             rbLangEng.IsChecked = false;
             if (cachedLanguage == UserSettings.Language.English)
             {
 
+                isSelfUpdate = true;
                 rbLangEng.IsChecked = true;
             }
             else
             {
+                isSelfUpdate = true;
                 rbLangCro.IsChecked = true;
             }
             isLanguagePicked = true;
@@ -142,19 +142,19 @@ namespace WPFInterface
                     isRepresentationPicked = true;
                 }
             }
-            isSelfUpdate = false;
         }
         private void updateRadioRep()
         {
-            isSelfUpdate = true;
             rbRepFem.IsChecked = false;
             rbRepMale.IsChecked = false;
             if (cachedLeague == UserSettings.League.Female)
             {
+                isSelfUpdate = true;
                 rbRepFem.IsChecked = true;
             }
             else
             {
+                isSelfUpdate = true;
                 rbRepMale.IsChecked = true;
             }
             isRepresentationPicked = true;
@@ -188,29 +188,31 @@ namespace WPFInterface
                     updateRadioResolution();
                 }
             }
-            isSelfUpdate = false;
         }
         private void updateRadioResolution()
         {
-            isSelfUpdate = true;
             rbSizeFullscreen.IsChecked = false;
             rbSize720p.IsChecked = false;
             rbSize480p.IsChecked = false;
             rbSize360p.IsChecked = false;
             if (cachedScreensize == 0)
             {
+                isSelfUpdate = true;
                 rbSizeFullscreen.IsChecked = true;
             }
             if (cachedScreensize == 10)
             {
+                isSelfUpdate = true;
                 rbSize720p.IsChecked = true;
             }
             if (cachedScreensize == 20)
             {
+                isSelfUpdate = true;
                 rbSize480p.IsChecked = true;
             }
             if (cachedScreensize == 30)
             {
+                isSelfUpdate = true;
                 rbSize360p.IsChecked = true;
             }
             isScreenPicked = true;
@@ -439,7 +441,7 @@ namespace WPFInterface
                 lastMatch.Where(x => x.AwayTeam.Code == fifa_code).Select(x => $"{x.HomeTeam.Country} ({x.HomeTeam.Code})").ToList().ForEach(playedAgainst.Add);
                 lastMatch.Where(x => x.HomeTeam.Code == fifa_code).Select(x => $"{x.AwayTeam.Country} ({x.AwayTeam.Code})").ToList().ForEach(playedAgainst.Add);
                 cbRepresentationGuest.ItemsSource = playedAgainst;
-                cbRepresentation.SelectedItem = $"{App.lastTeam.Country} ({fifa_code})"; ;
+                cbRepresentation.SelectedItem = $"{App.lastTeam.Country} ({fifa_code})";
             }
             catch (HttpStatusException ex)
             {

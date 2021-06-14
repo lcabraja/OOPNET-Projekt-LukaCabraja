@@ -37,7 +37,6 @@ namespace WPFInterface
 
         void App_Startup(object sender, StartupEventArgs e)
         {
-            //MessageBox.Show(URL.F_BASE_URL.Substring(7).Replace('\\', '-').Replace('/', '-').Replace('/', '-'));
             PreparePaths();
             PrepareLocale();
             tryFifa_code();
