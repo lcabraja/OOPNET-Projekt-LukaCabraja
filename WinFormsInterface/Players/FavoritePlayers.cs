@@ -40,7 +40,7 @@ namespace WinFormsInterface
                 string path = Program.userSettings.GenderedRepresentationFilePath() + Program.lastTeam.FifaCode + ".json";
                 if (File.Exists(path))
                 {
-                    players = (await Fetch.FetchJsonFromFileAsync<List<Player>>(path));
+                    players = await Fetch.FetchJsonFromFileAsync<List<Player>>(path);
                 }
                 else
                 {
