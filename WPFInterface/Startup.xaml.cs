@@ -24,24 +24,15 @@ namespace WPFInterface
     public partial class Startup : Window
     {
         // ===================================================================================== Props & Variables
-        private bool keepAlive = false;
-        private List<TeamResult> teams;
+        internal bool keepAlive = false;
         private UserSettings.Language cachedLanguage;
         private bool isLanguagePicked = false;
-        private UserSettings.League cachedLeague;
+        private UserSettings.League cachedRepresentation;
         private bool isRepresentationPicked = false;
+        private bool isHomePicked = false;
+        private bool isGuestPicked = false;
         private int cachedScreensize;
         private bool isScreenPicked = false;
-        private bool isSelfUpdate = false;
-        private List<TeamResult> cachedRepresentaionF = null;
-        private List<TeamResult> cachedRepresentaionM = null;
-        private bool isDataFetchedF = false;
-        private bool isDataFetchedM = false;
-        private bool isWithinSetup = false;
-        private List<Match> lastMatch = null;
-        private string lastFifaCode = string.Empty;
-        private bool isGuestTeamSelected = false;
-        private int isSetToInit = 0;
         // ===================================================================================== Constructor & Loaded
         public Startup()
         {
@@ -62,446 +53,245 @@ namespace WPFInterface
             rbSize480p.Checked += rbResolution_Checked;
             rbSize360p.Checked += rbResolution_Checked;
 
-            cbRepresentation.DropDownClosed += CbRepresentation_DropDownClosed;
-            cbRepresentationGuest.DropDownClosed += CbRepresentationGuest_DropDownClosed;
             cbRepresentation.SelectionChanged += CbRepresentation_SelectionChanged;
             cbRepresentationGuest.SelectionChanged += CbRepresentationGuest_SelectionChanged;
         }
-
         private void Startup_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeLocals();
-            if (App.userSettings == null)
-            {
-                cachedLanguage = App.defaultLocale;
-            }
-            else
-            {
-                cachedLanguage = App.userSettings.SavedLanguage;
-                cachedLeague = App.userSettings.SavedLeague;
-            }
-
-            UpdateRadioLang();
-            updateRadioRep();
         }
         // ===================================================================================== Language Radio 
         private void rbLang_Checked(object sender, RoutedEventArgs e)
         {
-            if (!isSelfUpdate)
+            if (sender is RadioButton radioChecked)
             {
-                if (sender is RadioButton rbSelected)
+                if (radioChecked == rbLangEng)
                 {
-                    if (rbSelected == rbLangEng)
-                    {
-                        cachedLanguage = UserSettings.Language.English;
-                    }
-                    else
-                    {
-                        cachedLanguage = UserSettings.Language.Croatian;
-                    }
-                    UpdateRadioLang();
-                    isLanguagePicked = true;
+                    cachedLanguage = UserSettings.Language.English;
+                    rbLangCro.IsChecked = false;
                 }
+                else if (radioChecked == rbLangCro)
+                {
+                    cachedLanguage = UserSettings.Language.Croatian;
+                    rbLangEng.IsChecked = false;
+                }
+                isLanguagePicked = true;
+                AdvanceLevel(0);
             }
-        }
-        private void UpdateRadioLang()
-        {
-            rbLangCro.IsChecked = false;
-            rbLangEng.IsChecked = false;
-            if (cachedLanguage == UserSettings.Language.English)
-            {
-
-                isSelfUpdate = true;
-                rbLangEng.IsChecked = true;
-            }
-            else
-            {
-                isSelfUpdate = true;
-                rbLangCro.IsChecked = true;
-            }
-            isLanguagePicked = true;
-            tryLowerHalf();
-            isSelfUpdate = false;
         }
         // ===================================================================================== Representation Radio 
         private void rbRep_Checked(object sender, RoutedEventArgs e)
         {
-            if (!isSelfUpdate)
+            if (sender is RadioButton radioChecked)
             {
-                if (sender is RadioButton rbSelected)
+                if (radioChecked == rbRepFem)
                 {
-                    if (rbSelected == rbRepFem)
-                    {
-                        cachedLeague = UserSettings.League.Female;
-                    }
-                    else
-                    {
-                        cachedLeague = UserSettings.League.Male;
-                    }
-                    updateRadioRep();
-                    isRepresentationPicked = true;
+                    cachedRepresentation = UserSettings.League.Female;
+                    rbRepMale.IsChecked = false;
                 }
+                else if (radioChecked == rbRepMale)
+                {
+                    cachedRepresentation = UserSettings.League.Male;
+                    rbRepFem.IsChecked = false;
+                }
+                isRepresentationPicked = true;
+                AdvanceLevel(0);
+                FillHomeComboBox();
             }
         }
-        private void updateRadioRep()
+        // ===================================================================================== ComboBox Handlers
+        private async void CbRepresentation_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            rbRepFem.IsChecked = false;
-            rbRepMale.IsChecked = false;
-            if (cachedLeague == UserSettings.League.Female)
-            {
-                isSelfUpdate = true;
-                rbRepFem.IsChecked = true;
-            }
-            else
-            {
-                isSelfUpdate = true;
-                rbRepMale.IsChecked = true;
-            }
-            isRepresentationPicked = true;
-            setupLowerHalf();
-            tryLowerHalf();
-            isSelfUpdate = false;
+            var fifaCodeHome = DetermineSelectedFifaCode(cbRepresentation);
+
+            List<Match> matches = await GetMatches(fifaCodeHome);
+            List<string> otherReps = new List<string>();
+            matches.Where(x => x.HomeTeam.Code == fifaCodeHome).ToList()
+                .ForEach(x => otherReps.Add($"{x.AwayTeam.Country} ({x.AwayTeam.Code})"));
+            matches.Where(x => x.AwayTeam.Code == fifaCodeHome).ToList()
+                .ForEach(x => otherReps.Add($"{x.HomeTeam.Country} ({x.HomeTeam.Code})"));
+            cbRepresentationGuest.ItemsSource = otherReps;
+            AdvanceLevel(1);
+            isHomePicked = true;
+        }
+        private async void CbRepresentationGuest_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            string fifaCodeHome = DetermineSelectedFifaCode(cbRepresentation);
+            string fifaCodeGuest = DetermineSelectedFifaCode(cbRepresentationGuest);
+            lbScore.Content = "Fetching";
+            List<Match> matches = await GetMatches(fifaCodeHome);
+            lbScore.Content = "Done";
+            Match match1 = matches.Where(x => x.HomeTeam.Code == fifaCodeHome && x.AwayTeam.Code == fifaCodeGuest).FirstOrDefault();
+            Match match2 = matches.Where(x => x.HomeTeam.Code == fifaCodeGuest && x.AwayTeam.Code == fifaCodeHome).FirstOrDefault();
+            Match match = match1 ?? match2;
+            lbScore.Content = $"{match.HomeTeam.Code} {match.HomeTeam.Goals} : {match.AwayTeam.Code} {match.AwayTeam.Goals}";
+            AdvanceLevel(1);
+            isGuestPicked = true;
         }
         // ===================================================================================== Radio Screen Size
         private void rbResolution_Checked(object sender, RoutedEventArgs e)
         {
-            if (!isSelfUpdate)
+            if (sender is RadioButton radioChecked)
             {
-                if (sender is RadioButton rbSelected)
+                if (radioChecked == rbSizeFullscreen)
                 {
-                    if (rbSelected == rbSizeFullscreen)
-                    {
-                        cachedScreensize = 0;
-                    }
-                    if (rbSelected == rbSize720p)
-                    {
-                        cachedScreensize = 10;
-                    }
-                    if (rbSelected == rbSize480p)
-                    {
-                        cachedScreensize = 20;
-                    }
-                    if (rbSelected == rbSize360p)
-                    {
-                        cachedScreensize = 30;
-                    }
-                    updateRadioResolution();
+                    cachedScreensize = 0;
+                    UncheckSizeButtons(rbSizeFullscreen);
                 }
+                else if (radioChecked == rbSize360p)
+                {
+                    cachedScreensize = 10;
+                    UncheckSizeButtons(rbSize360p);
+                }
+                else if (radioChecked == rbSize480p)
+                {
+                    cachedScreensize = 20;
+                    UncheckSizeButtons(rbSize480p);
+                }
+                else if (radioChecked == rbSize720p)
+                {
+                    cachedScreensize = 30;
+                    UncheckSizeButtons(rbSize720p);
+                }
+                isScreenPicked = true;
+                AdvanceLevel(1);
             }
         }
-        private void updateRadioResolution()
+        private void UncheckSizeButtons(RadioButton button)
         {
-            rbSizeFullscreen.IsChecked = false;
-            rbSize720p.IsChecked = false;
-            rbSize480p.IsChecked = false;
-            rbSize360p.IsChecked = false;
-            if (cachedScreensize == 0)
-            {
-                isSelfUpdate = true;
-                rbSizeFullscreen.IsChecked = true;
-            }
-            if (cachedScreensize == 10)
-            {
-                isSelfUpdate = true;
-                rbSize720p.IsChecked = true;
-            }
-            if (cachedScreensize == 20)
-            {
-                isSelfUpdate = true;
-                rbSize480p.IsChecked = true;
-            }
-            if (cachedScreensize == 30)
-            {
-                isSelfUpdate = true;
-                rbSize360p.IsChecked = true;
-            }
-            isScreenPicked = true;
-            tryLowerHalf();
-            isSelfUpdate = false;
+            if (button != rbSizeFullscreen)
+                rbSizeFullscreen.IsChecked = false;
+            if (button != rbSize360p)
+                rbSize360p.IsChecked = false;
+            if (button != rbSize480p)
+                rbSize480p.IsChecked = false;
+            if (button != rbSize720p)
+                rbSize720p.IsChecked = false;
         }
         // ===================================================================================== Lower Half
-        private void tryLowerHalf()
+        private async void FillHomeComboBox()
         {
-            if (isLanguagePicked && isRepresentationPicked)
+            List<TeamResult> representations = (await GetRepresentations()).OrderBy(x => x.FifaCode).ToList();
+            cbRepresentation.ItemsSource = representations.Select(x => $"{x.Country} ({x.FifaCode})").ToList();
+            if (App.userSettings.SavedLeague == cachedRepresentation && App.lastTeam != null)
             {
-                if (App.isUserOnboarded)
-                {
-                    setupLowerHalf();
-                }
-                else
-                {
-                    try
-                    {
-                        var user = new UserSettings { SavedLanguage = cachedLanguage, SavedLeague = cachedLeague };
-                        File.WriteAllText(App.USER, user.ToString());
-                        App.userSettings = user;
-                        App.isUserOnboarded = true;
-                    }
-                    catch (HttpStatusException ex)
-                    {
-                        lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
-                        MessageBox.Show(ex.Message, ex.GetType().Name);
-                    }
-                    catch (JsonException ex)
-                    {
-                        lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
-                        MessageBox.Show(ex.Message, ex.GetType().Name);
-                        Environment.Exit(ex.HResult);
-                    }
-                    catch (Exception ex)
-                    {
-                        lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
-                        MessageBox.Show(ex.Message, ex.GetType().Name);
-                        Environment.Exit(ex.HResult);
-                    }
-                }
+                cbRepresentation.SelectedValue = $"{App.lastTeam.Country} ({App.lastTeam.FifaCode})";
             }
-        }
-        private void setupLowerHalf()
-        {
-            if (!isWithinSetup)
+            else
             {
-                isWithinSetup = true;
-                spRepresentation.IsEnabled = true;
-                spScreensize.IsEnabled = true;
-
-
-
-                updateComboBoxes();
-                if (App.isScreensizeSet)
-                {
-                    cachedScreensize = App.screenSize.ChosenSize;
-                    updateRadioResolution();
-                }
-
-                isWithinSetup = false;
-            }
-        }
-        private async void updateComboBoxes()
-        {
-            try
-            {
-                lbLoadingRepresentation.Content = App.LocalizedString("Fetching");
-                List<TeamResult> representations = null;
-                switch (cachedLeague)
-                {
-                    case UserSettings.League.Female:
-                        if (!isDataFetchedF)
-                        {
-                            string uri = App.CACHE + URL.Teams(URL.F_BASE_URL).Substring(7).Replace('\\', '-').Replace('/', '-') + "TeamResult" + ".json"; //checked 1
-                            if (File.Exists(uri))
-                            {
-                                representations = await Fetch.FetchJsonFromFileAsync<List<TeamResult>>(uri);
-                            }
-                            else
-                            {
-                                representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(URL.F_BASE_URL));
-                                File.WriteAllText(uri, JsonConvert.SerializeObject(representations));
-                            }
-
-                            cachedRepresentaionF = representations;
-                            isDataFetchedF = true;
-                        }
-                        else
-                        {
-                            representations = cachedRepresentaionF;
-                        }
-                        teams = representations;
-                        break;
-                    case UserSettings.League.Male:
-                        if (!isDataFetchedM)
-                        {
-                            string uri = App.CACHE + URL.Teams(URL.M_BASE_URL).Substring(7).Replace('\\', '-').Replace('/', '-') + "TeamResult" + ".json"; //checked2
-                            if (File.Exists(uri))
-                            {
-                                representations = await Fetch.FetchJsonFromFileAsync<List<TeamResult>>(uri);
-                            }
-                            else
-                            {
-                                representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(URL.M_BASE_URL));
-                                File.WriteAllText(uri, JsonConvert.SerializeObject(representations));
-                            }
-
-                            cachedRepresentaionM = representations;
-                            isDataFetchedM = true;
-                        }
-                        else
-                        {
-                            representations = cachedRepresentaionM;
-                        }
-                        teams = representations;
-                        break;
-                    default:
-                        break;
-                }
-                var selectedReps = representations.OrderBy(x => x.FifaCode).Select(x => $"{x.Country} ({x.FifaCode})").ToList();
-                cbRepresentation.ItemsSource = selectedReps;
-                //cbRepresentationGuest.ItemsSource = selectedReps;
-                UpdateGuest();
                 cbRepresentation.SelectedIndex = 0;
-                lbLoadingRepresentation.Content = App.LocalizedString("Done");
-            }
-            catch (HttpStatusException ex)
-            {
-                lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
-                MessageBox.Show(ex.Message, ex.GetType().Name);
-            }
-            catch (JsonException ex)
-            {
-                lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
-                MessageBox.Show(ex.Message, ex.GetType().Name);
-                Environment.Exit(ex.HResult);
-            }
-            catch (Exception ex)
-            {
-                lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
-                MessageBox.Show(ex.Message, ex.GetType().Name);
-                Environment.Exit(ex.HResult);
             }
         }
-        // ===================================================================================== ComboBox Handlers
-        private void CbRepresentation_DropDownClosed(object sender, EventArgs e)
+        private string DetermineSelectedFifaCode(ComboBox comboBox)
         {
+            return comboBox.SelectedValue.ToString().Split("(").Last().Substring(0, 3);
         }
-        private void CbRepresentationGuest_DropDownClosed(object sender, EventArgs e)
+        // ===================================================================================== Request Matches
+        private async Task<List<Match>> GetMatches(string fifa_code)
         {
-        }
-        private void CbRepresentation_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            UpdateGuest();
-        }
-        private void CbRepresentationGuest_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            try
+            List<Match> matches = null;
+            string baseurl = GetGenderedCachedRepresentation();
+            string uri = App.CACHE + baseurl.Substring(7).Replace('\\', '-').Replace('/', '-') + fifa_code + ".json";
+            if (File.Exists(uri))
             {
-                cbRepresentation.SelectionChanged -= CbRepresentationGuest_SelectionChanged;
-                string score = null;
-                string fifa_code = FindSelectedRepresentation(cbRepresentation)?.FifaCode;
-                App.fifaCodeHome = fifa_code;
-                string fifa_code_guest = FindSelectedRepresentation(cbRepresentationGuest)?.FifaCode;
-                App.fifaCodeGuest = fifa_code_guest;
+                matches = await Fetch.FetchJsonFromFileAsync<List<Match>>(uri);
+            }
+            else
+            {
+                matches = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(baseurl, fifa_code));
+                File.WriteAllText(uri, JsonConvert.SerializeObject(matches));
+            }
+            return matches;
+        }
+        // ===================================================================================== Request Team Results
+        private async Task<List<TeamResult>> GetRepresentations()
+        {
+            List<TeamResult> representations = null;
+            string baseUrl = GetGenderedCachedRepresentation();
 
-                var m = lastMatch?.Find(x => (x.AwayTeam.Code == fifa_code && x.HomeTeam.Code == fifa_code_guest) ||
-                                (x.AwayTeam.Code == fifa_code_guest && x.HomeTeam.Code == fifa_code));
-                if (m == null)
+            string uri = App.CACHE + baseUrl.Substring(7).Replace('\\', '-').Replace('/', '-') + "TeamResult" + ".json";
+            if (File.Exists(uri))
+            {
+                representations = await Fetch.FetchJsonFromFileAsync<List<TeamResult>>(uri);
+            }
+            else
+            {
+                representations = await Fetch.FetchJsonFromUrlAsync<List<TeamResult>>(URL.Teams(baseUrl));
+                File.WriteAllText(uri, JsonConvert.SerializeObject(representations));
+            }
+            return representations;
+        }
+        // ===================================================================================== Get Gendered Base URL
+        private string GetGenderedCachedRepresentation()
+        {
+            string baseUrl = null;
+            if (cachedRepresentation == UserSettings.League.Female)
+                baseUrl = URL.F_BASE_URL;
+            if (cachedRepresentation == UserSettings.League.Male)
+                baseUrl = URL.M_BASE_URL;
+            return baseUrl;
+        }
+        // ===================================================================================== Progress Tracker
+        private void AdvanceLevel(int v)
+        {
+            if (v == 0)
+            {
+                if (isLanguagePicked && isRepresentationPicked)
                 {
-                    score = App.LocalizedString("NoMatchFound");
+                    spRepresentation.IsEnabled = true;
+                    spScreensize.IsEnabled = true;
                 }
-                else
-                {
-                    score = $"{(fifa_code == m.HomeTeam.Code ? m.HomeTeam.Goals : m.AwayTeam.Goals)} : " +
-                        $"{(fifa_code == m.HomeTeam.Code ? m.HomeTeam.Goals : m.AwayTeam.Goals)}";
-                }
-                lbScore.Content = score ?? App.LocalizedString("NoMatchFound");
-                if (!isGuestTeamSelected)
+            }
+            else if (v == 1)
+            {
+                if (isHomePicked && isGuestPicked && isScreenPicked)
                 {
                     btContinue.IsEnabled = true;
                 }
-                isGuestTeamSelected = true;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error locating match");
-                MessageBox.Show(ex.Message, "Error locating match");
-                throw;
-            }
-            finally
-            {
-                cbRepresentation.SelectionChanged += CbRepresentationGuest_SelectionChanged;
             }
         }
-        private async void UpdateGuest()
-        {
-            try
-            {
-                string fifa_code = FindSelectedRepresentation(cbRepresentation)?.FifaCode;
-                if (fifa_code == null)
-                {
-                    if (App.lastTeam != null)
-                    {
-                        fifa_code = App.lastTeam.FifaCode;
-                    }
-                }
-                App.fifaCodeHome = fifa_code;
-                string fifa_code_guest = FindSelectedRepresentation(cbRepresentationGuest)?.FifaCode;
-                App.fifaCodeGuest = fifa_code_guest;
-
-                string uri = App.CACHE + App.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + fifa_code + ".json"; //checked 1
-                if (File.Exists(uri))
-                {
-                    lastMatch = await Fetch.FetchJsonFromFileAsync<List<Match>>(uri);
-                }
-                else
-                {
-                    lastMatch = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), fifa_code));
-                    File.WriteAllText(uri, JsonConvert.SerializeObject(lastMatch));
-                }
-
-                List<string> playedAgainst = new List<string>();
-                lastMatch.Where(x => x.AwayTeam.Code == fifa_code).Select(x => $"{x.HomeTeam.Country} ({x.HomeTeam.Code})").ToList().ForEach(playedAgainst.Add);
-                lastMatch.Where(x => x.HomeTeam.Code == fifa_code).Select(x => $"{x.AwayTeam.Country} ({x.AwayTeam.Code})").ToList().ForEach(playedAgainst.Add);
-                cbRepresentationGuest.ItemsSource = playedAgainst;
-                cbRepresentation.SelectedItem = $"{App.lastTeam.Country} ({fifa_code})";
-            }
-            catch (HttpStatusException ex)
-            {
-                MessageBox.Show(ex.Message, App.LocalizedString("errorRequest"));
-            }
-            catch (JsonException ex)
-            {
-                MessageBox.Show(ex.Message, App.LocalizedString("errorRequest"));
-                MessageBox.Show(ex.Message, App.LocalizedString("errorJson"));
-                Environment.Exit(ex.HResult);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, ex.GetType().Name);
-                Environment.Exit(ex.HResult);
-            }
-        }
-
         // ===================================================================================== Locals
         private void InitializeLocals()
         {
             this.Title = App.LocalizedString("Onboarding");
         }
         // ===================================================================================== Finish and save
-        private void finishOnboarding()
-        {
-            UserSettings user;
-            ScreenSize size;
-            try
-            {
-                user = new UserSettings { SavedLanguage = cachedLanguage, SavedLeague = cachedLeague };
-                size = new ScreenSize { ChosenSize = cachedScreensize };
-                App.UpdateUserSettings(user);
-                try
-                {
-                    File.WriteAllText(App.USER, user.ToString());
-                    File.WriteAllText(App.REPRESENTATION, FindSelectedRepresentation(cbRepresentation).ToString());
-                    File.WriteAllText(App.SIZE, size.ToString());
-                    App.UpdateUserSettings(user);
-                    App.UpdateUserSize(size);
-                    App.tryFifa_code();
-                    keepAlive = true;
-                }
-                catch (Exception)
-                {
-                    EndOnboarding();
-                }
-            }
-            catch (Exception)
-            {
-                keepAlive = false;
-                EndOnboarding();
-            }
-            finally
-            {
-                this.Close();
-            }
-        }
+        //private void finishOnboarding()
+        //{
+        //    UserSettings user;
+        //    ScreenSize size;
+        //    try
+        //    {
+        //        user = new UserSettings { SavedLanguage = cachedLanguage, SavedLeague = cachedRepresentation };
+        //        size = new ScreenSize { ChosenSize = cachedScreensize };
+        //        App.UpdateUserSettings(user);
+        //        try
+        //        {
+        //            File.WriteAllText(App.USER, user.ToString());
+        //            File.WriteAllText(App.REPRESENTATION, FindSelectedRepresentation(cbRepresentation).ToString());
+        //            File.WriteAllText(App.SIZE, size.ToString());
+        //            App.UpdateUserSettings(user);
+        //            App.UpdateUserSize(size);
+        //            App.tryFifa_code();
+        //            keepAlive = true;
+        //        }
+        //        catch (Exception)
+        //        {
+        //            EndOnboarding();
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        keepAlive = false;
+        //        EndOnboarding();
+        //    }
+        //    finally
+        //    {
+        //        this.Close();
+        //    }
+        //}
         // ===================================================================================== Abort
-        private static void EndOnboarding()
+        private static void AbortOnboarding()
         {
             MessageBox.Show(App.LocalizedString("errorOnboarding"));
             try
@@ -520,45 +310,16 @@ namespace WPFInterface
         // ===================================================================================== Continue Button
         private void btContinue_Click(object sender, EventArgs e)
         {
-            if (isLanguagePicked && isRepresentationPicked && isScreenPicked)
+            if(isLanguagePicked && isRepresentationPicked && isHomePicked && isGuestPicked && isScreenPicked)
             {
-                finishOnboarding();
+                
             }
-        }
-        private TeamResult FindSelectedRepresentation(ComboBox dropdown)
-        {
-            if (dropdown.SelectedItem == null)
-                return null;
-            var fifa_code = dropdown.SelectedItem.ToString()
-                                                         .Split(' ')
-                                                         .Last()
-                                                         .Substring(1, 3);
-
-            return teams.Find(x => x.FifaCode == fifa_code);
         }
         // ===================================================================================== Close app on premature setup end
         private void Startup_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //base.OnClosing(e); pretty sure this is a recursion here
-
             if (keepAlive || !App.firstOnboarding) return;
-
-            // Application.Exit() did in fact not exit the application, only the form.
             Environment.Exit(0);
         }
-        //private void onboarding_KeyUp(object sender, KeyEventArgs e)
-        //{
-        //    switch (e.KeyCode)
-        //    {
-        //        case Keys.Escape:
-        //            if (!App.firstOnboarding)
-        //                keepAlive = true;
-        //            this.Close();
-        //            break;
-        //        case Keys.Enter:
-        //            nextStep();
-        //            break;
-        //    }
-        //}
     }
 }
