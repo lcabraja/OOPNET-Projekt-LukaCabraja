@@ -240,7 +240,7 @@ namespace WPFInterface
                     {
                         lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
                         MessageBox.Show(ex.Message, ex.GetType().Name);
-                        Environment.Exit(ex.HResult);
+                        //Environment.Exit(ex.HResult);
                     }
                     catch (JsonException ex)
                     {
@@ -325,7 +325,7 @@ namespace WPFInterface
             {
                 lbLoadingRepresentation.Content = App.LocalizedString("Aborting");
                 MessageBox.Show(ex.Message, ex.GetType().Name);
-                Environment.Exit(ex.HResult);
+                //Environment.Exit(ex.HResult);
             }
             catch (JsonException ex)
             {
@@ -403,7 +403,7 @@ namespace WPFInterface
             catch (HttpStatusException ex)
             {
                 MessageBox.Show(ex.Message, App.LocalizedString("errorRequest"));
-                Environment.Exit(ex.HResult);
+                //Environment.Exit(ex.HResult);
             }
             catch (JsonException ex)
             {

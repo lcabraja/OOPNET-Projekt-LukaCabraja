@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="WPFInterface.PlayerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WPFInterface"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100">
+    <Grid Margin="10">
+        <Grid.Background>
+            <SolidColorBrush Color="Red"/>
+        </Grid.Background>
+        <Label
+            x:Name="lbName"
+            Width="auto"
+            Height="auto"
+            FontSize="15"
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Center"
+            >
+            Pero Peric
+        </Label>
+        <Label
+            x:Name="lbNumber"
+            Width="auto"
+            Height="auto"
+            FontSize="50"
+            FontWeight="Bold"
+            VerticalAlignment="Center"
+            HorizontalAlignment="Center"
+            >
+            10
+        </Label>
+    </Grid>
+</UserControl>

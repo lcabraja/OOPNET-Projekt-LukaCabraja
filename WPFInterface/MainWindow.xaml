@@ -6,10 +6,108 @@
         xmlns:local="clr-namespace:WPFInterface"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TextBlock>
-            elloo
-        </TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal">
+            <Label x:Name="lbNaziv"></Label>
+            <Label x:Name="lbFifaCode"></Label>
+            <Label x:Name="lbGamesPlayed"></Label>
+            <Label x:Name="lbGamesWon"></Label>
+            <Label x:Name="lbGamesLost"></Label>
+            <Label x:Name="lbGamesUndecided"></Label>
+            <Label x:Name="lbGoalsScored"></Label>
+            <Label x:Name="lbGoalsTaken"></Label>
+            <Label x:Name="lbDiff"></Label>
+        </StackPanel>
+        <Grid
+            x:Name="gridWhole"
+            Grid.Row="1"
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.Background>
+                <ImageBrush ImageSource="C:\Users\lcabraja\source\repos\lcabraja\OOPNET-Projekt-LukaCabraja\WPFInterface\field-horizontal.png" />
+            </Grid.Background>
+
+            <Grid x:Name="gridHome" Grid.Column="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel 
+                    x:Name="stackHomeGoalie"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    >
+                </StackPanel>
+                <StackPanel 
+                    x:Name="stackHomeDefender"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    >
+                </StackPanel>
+                <StackPanel 
+                    x:Name="stackHomeMidfield"
+                    Grid.Column="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    >
+                </StackPanel>
+                <StackPanel 
+                    x:Name="stackHomeForward"
+                    Grid.Column="3"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    >
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="gridGuest" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel 
+                    x:Name="stackGuestGoalie"
+                    Grid.Column="3"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    >
+                </StackPanel>
+                <StackPanel 
+                    x:Name="stackGuestDefender"
+                    Grid.Column="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    >
+                </StackPanel>
+                <StackPanel 
+                    x:Name="stackGuestMidfield"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    >
+                </StackPanel>
+                <StackPanel 
+                    x:Name="stackGuestForward"
+                    Grid.Column="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    >
+                </StackPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

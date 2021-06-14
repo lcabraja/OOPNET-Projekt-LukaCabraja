@@ -63,6 +63,16 @@ namespace WPFInterface.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
+        internal static byte[] defaultpicture {
+            get {
+                object obj = ResourceManager.GetObject("defaultpicture", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
         internal static byte[] field {
             get {
                 object obj = ResourceManager.GetObject("field", resourceCulture);

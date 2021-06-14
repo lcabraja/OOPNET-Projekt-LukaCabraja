@@ -23,8 +23,9 @@ namespace WPFInterface
         public static string FEMALE_TEAMS { get { return BASE_DIR + "\\f\\"; } }
         public static string MALE_TEAMS { get { return BASE_DIR + "\\m\\"; } }
         public static UserSettings userSettings { get; set; }
-        public static ScreenSize screenSize { get; set; }
         public static bool isUserOnboarded = false;
+        public static ScreenSize screenSize { get; set; }
+        public static bool isScreensizeSet = false;
         public static TeamResult lastTeam { get; set; }
         public static Localizer localizer { get; private set; }
         internal static bool firstOnboarding = true;
@@ -119,10 +120,12 @@ namespace WPFInterface
             try
             {
                 screenSize = Fetch.FetchJsonFromFile<ScreenSize>(SIZE);
+                isScreensizeSet = true;
             }
             catch
             {
                 screenSize = null;
+                isScreensizeSet = false;
             }
         }
 
