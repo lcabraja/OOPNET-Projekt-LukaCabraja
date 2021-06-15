@@ -30,11 +30,7 @@ namespace WinFormsInterface
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RankedList));
             this.dgRanks = new System.Windows.Forms.DataGridView();
-            this.printDialog1 = new System.Windows.Forms.PrintDialog();
-            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
-            this.printPreviewDialog1 = new System.Windows.Forms.PrintPreviewDialog();
             this.pageSetupDialog1 = new System.Windows.Forms.PageSetupDialog();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.tsMenuPrint = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,30 +60,6 @@ namespace WinFormsInterface
             this.dgRanks.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgRanks.Size = new System.Drawing.Size(800, 450);
             this.dgRanks.TabIndex = 0;
-            // 
-            // printDialog1
-            // 
-            this.printDialog1.Document = this.printDocument1;
-            this.printDialog1.UseEXDialog = true;
-            // 
-            // printDocument1
-            // 
-            this.printDocument1.PrintPage += new System.Drawing.Printing.PrintPageEventHandler(this.printDocument1_PrintPage);
-            // 
-            // printPreviewDialog1
-            // 
-            this.printPreviewDialog1.AutoScrollMargin = new System.Drawing.Size(0, 0);
-            this.printPreviewDialog1.AutoScrollMinSize = new System.Drawing.Size(0, 0);
-            this.printPreviewDialog1.ClientSize = new System.Drawing.Size(400, 300);
-            this.printPreviewDialog1.Document = this.printDocument1;
-            this.printPreviewDialog1.Enabled = true;
-            this.printPreviewDialog1.Icon = ((System.Drawing.Icon)(resources.GetObject("printPreviewDialog1.Icon")));
-            this.printPreviewDialog1.Name = "printPreviewDialog1";
-            this.printPreviewDialog1.Visible = false;
-            // 
-            // pageSetupDialog1
-            // 
-            this.pageSetupDialog1.Document = this.printDocument1;
             // 
             // contextMenuStrip1
             // 
@@ -146,9 +118,6 @@ namespace WinFormsInterface
         #endregion
 
         private System.Windows.Forms.DataGridView dgRanks;
-        private System.Windows.Forms.PrintDialog printDialog1;
-        private System.Drawing.Printing.PrintDocument printDocument1;
-        private System.Windows.Forms.PrintPreviewDialog printPreviewDialog1;
         private System.Windows.Forms.PageSetupDialog pageSetupDialog1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem tsMenuPrint;

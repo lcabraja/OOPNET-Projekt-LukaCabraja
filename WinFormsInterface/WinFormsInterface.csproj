@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Grumsom.cSharp.Print" Version="1.0.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DataHandler\DataHandler.csproj" />
   </ItemGroup>
 
