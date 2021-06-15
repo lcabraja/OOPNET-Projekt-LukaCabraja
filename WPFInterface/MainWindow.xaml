@@ -5,15 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WPFInterface"
         mc:Ignorable="d"
+        SizeToContent="Manual"
         WindowStartupLocation="CenterScreen"
-        
-        Title="MainWindow" Height="450" Width="800">
+        MinWidth="640"
+        MinHeight="360"
+        Title="MainWindow" Height="720" Width="1280">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10">
             <Label x:Name="lbNaziv"></Label>
             <Label x:Name="lbFifaCode"></Label>
             <Label x:Name="lbGamesPlayed"></Label>
@@ -24,6 +26,16 @@
             <Label x:Name="lbGoalsTaken"></Label>
             <Label x:Name="lbDiff"></Label>
         </StackPanel>
+        <Button
+            x:Name="btSettings"
+            Padding="5"
+            Margin="10"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Right"
+            Click="btSettings_Click"
+            >
+            Settings
+        </Button>
         <Grid
             x:Name="gridWhole"
             Grid.Row="1"
