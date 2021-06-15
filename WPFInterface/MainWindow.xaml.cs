@@ -35,11 +35,19 @@ namespace WPFInterface
         }
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            if (App.screenSize != null)
+            {
+
+                Size size = App.screenSize.GetSize();
+                Width = size.Width;
+                Height = size.Height;
+                if (App.screenSize.ChosenSize == 0)
+                {
+                    this.WindowState = WindowState.Maximized;
+                }
+            }
             SetRepresentationLabels();
             LoadPlayers();
-            var size = App.screenSize.GetSize();
-            this.Height = size.Height;
-            this.Width = size.Width;
             gridWhole.Background = new ImageBrush(new BitmapImage(new Uri(System.IO.Path.GetFullPath(@"field-horizontal.png"))));
         }
 
@@ -47,23 +55,15 @@ namespace WPFInterface
         {
             try
             {
-                if (App.screenSize != null)
-                {
-                    this.RenderSize = App.screenSize.GetSize();
-                    if (App.screenSize.ChosenSize == 0)
-                    {
-                        this.WindowState = WindowState.Maximized;
-                    }
-                }
+                
                 List<Player> playersHome = new List<Player>();
                 List<Player> playersGuest = new List<Player>();
                 Match match = new Match();
-                string FifaCode = App.lastTeam.FifaCode;
                 string fifaCodeHome = null;
                 if (App.userSettings.SavedLeague == UserSettings.League.Female)
                     fifaCodeHome = App.fifaCodeHomeFemale;
                 else
-                    fifaCodeHome = App.fifaCodeGuestMale;
+                    fifaCodeHome = App.fifaCodeHomeMale;
                 List<Match> bigdata = null;
                 string uri = App.CACHE + App.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + fifaCodeHome + ".json"; //checked 1
                 if (File.Exists(uri))
@@ -93,16 +93,25 @@ namespace WPFInterface
                 string pathHome = App.userSettings.GenderedRepresentationFilePath() + fifaCodeHome + ".json";
                 if (File.Exists(pathHome))
                 {
-                    playersHome = await Fetch.FetchJsonFromFileAsync<List<Player>>(pathHome);
+                    (await Fetch.FetchJsonFromFileAsync<List<Player>>(pathHome)).ForEach(x => {
+                        var index = playersHome.FindIndex(y => y.ShirtNumber == x.ShirtNumber);
+                        if (index >= 0 && index < playersHome.Count)
+                            playersHome[index] = x;
+                    });
                 }
                 string pathGuest = App.userSettings.GenderedRepresentationFilePath() + fifaCodeGuest + ".json";
                 if (File.Exists(pathGuest))
                 {
-                    playersGuest = await Fetch.FetchJsonFromFileAsync<List<Player>>(pathGuest);
+                    (await Fetch.FetchJsonFromFileAsync<List<Player>>(pathGuest)).ForEach(x => {
+                        var index = playersGuest.FindIndex(y => y.ShirtNumber == x.ShirtNumber);
+                        if (index >= 0 && index < playersGuest.Count)
+                            playersGuest[index] = x;
+                    });
                 }
-
+                ClearPlayers();
                 playersGuest.ForEach(x => AddPlayerControl(x, gridGuest));
                 playersHome.ForEach(x => AddPlayerControl(x, gridHome));
+
             }
             catch (HttpStatusException ex)
             {
@@ -120,7 +129,21 @@ namespace WPFInterface
                 MessageBox.Show(ex.Message, ex.GetType().Name);
                 Environment.Exit(ex.HResult);
             }
+
         }
+
+        private void ClearPlayers()
+        {
+            stackGuestDefender.Children.Clear();
+            stackHomeDefender.Children.Clear();
+            stackGuestForward.Children.Clear();
+            stackHomeForward.Children.Clear();
+            stackGuestGoalie.Children.Clear();
+            stackHomeGoalie.Children.Clear();
+            stackGuestMidfield.Children.Clear();
+            stackHomeMidfield.Children.Clear();
+        }
+
         private void AddPlayerControl(Player player, Grid grid)
         {
             if (player == null)
@@ -254,6 +277,14 @@ namespace WPFInterface
         {
             if (keepalive) return;
             Environment.Exit(0);
+        }
+
+        private void btSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Startup startup = new Startup(true);
+            startup.ShowDialog();
+            SetRepresentationLabels();
+            LoadPlayers();
         }
     }
 }
