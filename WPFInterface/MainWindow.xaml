@@ -15,22 +15,26 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="10">
-            <Label x:Name="lbNaziv"></Label>
-            <Label x:Name="lbFifaCode"></Label>
-            <Label x:Name="lbGamesPlayed"></Label>
-            <Label x:Name="lbGamesWon"></Label>
-            <Label x:Name="lbGamesLost"></Label>
-            <Label x:Name="lbGamesUndecided"></Label>
-            <Label x:Name="lbGoalsScored"></Label>
-            <Label x:Name="lbGoalsTaken"></Label>
-            <Label x:Name="lbDiff"></Label>
+        <StackPanel Orientation="Vertical" Margin="5">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                <Label x:Name="lbNaziv"></Label>
+                <Label x:Name="lbFifaCode"></Label>
+                <Label x:Name="lbGamesPlayed"></Label>
+                <Label x:Name="lbGamesWon"></Label>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Label x:Name="lbGamesLost"></Label>
+                <Label x:Name="lbGamesUndecided"></Label>
+                <Label x:Name="lbGoalsScored"></Label>
+                <Label x:Name="lbGoalsTaken"></Label>
+                <Label x:Name="lbDiff"></Label>
+            </StackPanel>
         </StackPanel>
         <Button
             x:Name="btSettings"
             Padding="5"
             Margin="10"
-            VerticalAlignment="Top"
+            VerticalAlignment="Center"
             HorizontalAlignment="Right"
             Click="btSettings_Click"
             >
