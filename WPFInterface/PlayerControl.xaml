@@ -6,6 +6,12 @@
              xmlns:local="clr-namespace:WPFInterface"
              mc:Ignorable="d" 
              d:DesignHeight="100" d:DesignWidth="100">
+    <UserControl.RenderTransformOrigin>
+        <Point X="0.5" Y="0.5" />
+    </UserControl.RenderTransformOrigin>
+    <UserControl.RenderTransform>
+        <RotateTransform Angle="0" />
+    </UserControl.RenderTransform>
     <Grid Margin="10" x:Name="gridContainer">
         <Grid.Background>
             <SolidColorBrush Color="White"/>
