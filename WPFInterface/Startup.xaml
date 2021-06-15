@@ -24,7 +24,7 @@
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             >
-            <Label>
+            <Label x:Name="lblang">
                 Language
             </Label>
             <RadioButton Margin="0 2 0 2" x:Name="rbLangEng">
@@ -41,8 +41,8 @@
             VerticalAlignment="Center"
             HorizontalAlignment="Center"
             >
-            <Label>
-                Representation
+            <Label x:Name="lbChampion">
+                Championship
             </Label>
             <RadioButton Margin="0 2 0 2" x:Name="rbRepFem">
                 Female
@@ -62,6 +62,7 @@
             HorizontalAlignment="Center"
             >
             <Label 
+                x:Name="labelrep"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
             >
@@ -77,6 +78,7 @@
             <Label x:Name="lbLoadingRepresentation">
             </Label>
             <Label 
+                x:Name="labelrepguest"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center"
             >
@@ -90,8 +92,6 @@
             >
             </ComboBox>
             <Label x:Name="lbLoadingRepresentationGuest">
-            </Label>
-            <Label x:Name="lbScore">
             </Label>
         </StackPanel>
         <!--Screen Size-->

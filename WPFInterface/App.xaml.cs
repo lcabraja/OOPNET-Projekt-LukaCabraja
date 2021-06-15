@@ -21,6 +21,7 @@ namespace WPFInterface
         public static string SIZE { get { return BASE_DIR + "\\size.json"; } }
         public static string REPRESENTATION { get { return BASE_DIR + "\\rep.json"; } }
         public static string CACHE { get { return BASE_DIR + "\\cache\\"; } }
+        public static string CODES { get { return BASE_DIR + "\\codes.json"; } }
         public static string FEMALE_TEAMS { get { return BASE_DIR + "\\f\\"; } }
         public static string MALE_TEAMS { get { return BASE_DIR + "\\m\\"; } }
         public static UserSettings userSettings { get; set; }
@@ -29,19 +30,21 @@ namespace WPFInterface
         public static bool isScreensizeSet = false;
         public static TeamResult lastTeam { get; set; }
         public static Localizer localizer { get; private set; }
+
         internal static bool firstOnboarding = true;
         internal static UserSettings.Language defaultLocale = UserSettings.Language.English;
 
-        internal static string fifaCodeHome = null;
-        internal static string fifaCodeGuest = null;
+        internal static string fifaCodeGuestFemale = null;
+        internal static string fifaCodeHomeFemale = null;
+        internal static string fifaCodeGuestMale = null;
+        internal static string fifaCodeHomeMale = null;
 
         void App_Startup(object sender, StartupEventArgs e)
         {
             PreparePaths();
             PrepareLocale();
-            tryFifa_code();
-            tryScreenSize_code();
-            isUserOnboarded = userOnboarded();;
+            TrySetup();
+            isUserOnboarded = userOnboarded(); ;
 
             Startup startup = new Startup();
             startup.ShowDialog();
@@ -51,30 +54,32 @@ namespace WPFInterface
 
             MainWindow mainWindow = new MainWindow();
             mainWindow.ShowDialog();
-        }
 
+            static void TrySetup()
+            {
+                TryFifa_code();
+                TryScreenSize();
+                TryCodes();
+            }
+        }
         internal static void UpdateUserSettings()
         {
             UpdateUserSettings(userSettings);
         }
-
         internal static void UpdateUserSettings(UserSettings user)
         {
             userSettings = user;
             localizer = UpdateLocale(user.SavedLanguage);
         }
-
         internal static void UpdateUserSize()
         {
             UpdateUserSize(screenSize);
         }
-
         internal static void UpdateUserSize(ScreenSize size)
         {
             screenSize = size;
             //localizer = Update(size.SavedLanguage);
         }
-
         private static void PrepareLocale()
         {
             try
@@ -86,30 +91,33 @@ namespace WPFInterface
                 MessageBox.Show(ex.Message, "Could not initialize locales.");
             }
         }
-
         private static Localizer UpdateLocale(UserSettings.Language lang)
         {
             try
             {
-                switch (lang)
-                {
-                    case UserSettings.Language.Croatian:
-                        return new Localizer("hr"); ;
-                    case UserSettings.Language.English:
-                        return new Localizer("en"); ;
-                    default:
-                        return new Localizer("en");
-                }
+                return new Localizer(LanguageToLocale(lang));
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Could not initialize locales.");
-                Environment.Exit(1);
+                Environment.Exit(ex.HResult);
                 return null;
             }
         }
+        internal static string LanguageToLocale(UserSettings.Language language)
+        {
+            switch (language)
+            {
 
-        internal static void tryFifa_code()
+                case UserSettings.Language.Croatian:
+                    return "hr";
+                case UserSettings.Language.English:
+                    return "en";
+                default:
+                    return LanguageToLocale(defaultLocale);
+            }
+        }
+        internal static void TryFifa_code()
         {
             try
             {
@@ -120,7 +128,7 @@ namespace WPFInterface
                 lastTeam = null;
             }
         }
-        internal static void tryScreenSize_code()
+        internal static void TryScreenSize()
         {
             try
             {
@@ -133,7 +141,6 @@ namespace WPFInterface
                 isScreensizeSet = false;
             }
         }
-
         private static void PreparePaths()
         {
             try
@@ -148,7 +155,6 @@ namespace WPFInterface
                 MessageBox.Show(ex.Message, "Could not create save folder.");
             }
         }
-
         private static bool userOnboarded()
         {
             try
@@ -165,6 +171,25 @@ namespace WPFInterface
         internal static string LocalizedString(string request)
         {
             return localizer.Resource(request);
+        }
+        internal static string LocalizedString(string request, UserSettings.Language locale)
+        {
+            return localizer.Resource(request, LanguageToLocale(locale));
+        }
+        internal static void TryCodes()
+        {
+            try
+            {
+                var teamCodes = Fetch.FetchJsonFromFile<TeamCodes>(CODES);
+                fifaCodeGuestFemale = teamCodes.GuestTeamCodeFemale;
+                fifaCodeHomeFemale = teamCodes.HomeTeamCodeFemale;
+                fifaCodeGuestMale = teamCodes.GuestTeamCodeMale;
+                fifaCodeHomeMale = teamCodes.HomeTeamCodeMale;
+            }
+            catch
+            {
+                fifaCodeHomeFemale = fifaCodeGuestFemale = fifaCodeHomeMale = fifaCodeGuestMale = null;
+            }
         }
     }
 }

@@ -170,5 +170,37 @@
   "tsMenuPreview": {
     "hr": "Pregled ispisa",
     "en": "Print Preview"
+  },
+  "tooManyRequests": {
+    "hr": "Molimo pricekajte prije ponovnog pokusaja.",
+    "en": "Please wait before trying again."
+  },
+  "tooManyRequestsMessage": {
+    "hr": "Greska, previse upita",
+    "en": "Error, too many requests"
+  },
+  "errorExit": {
+    "hr": "Doslo je do neoporavljive greske",
+    "en": "An unrecoverable error has been encountered"
+  },
+  "error": {
+    "hr": "Greska",
+    "en": "Error"
+  },
+  "Fullscreen": {
+    "hr": "Puni ekran",
+    "en": "Fullscreen"
+  },
+  "screensize": {
+    "hr": "Velicina ekrana",
+    "en": "Screen size"
+  },
+  "Representation": {
+    "hr": "Reprezentacija",
+    "en": "Representation"
+  },
+  "GuestRepresentation": {
+    "hr": "Gostinska Reprezentacija",
+    "en": "Guest Representation"
   }
 }

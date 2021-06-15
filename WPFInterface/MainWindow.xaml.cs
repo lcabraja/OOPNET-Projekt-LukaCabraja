@@ -59,33 +59,43 @@ namespace WPFInterface
                 List<Player> playersGuest = new List<Player>();
                 Match match = new Match();
                 string FifaCode = App.lastTeam.FifaCode;
-
+                string fifaCodeHome = null;
+                if (App.userSettings.SavedLeague == UserSettings.League.Female)
+                    fifaCodeHome = App.fifaCodeHomeFemale;
+                else
+                    fifaCodeHome = App.fifaCodeGuestMale;
                 List<Match> bigdata = null;
-                string uri = App.CACHE + App.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + App.fifaCodeHome + ".json"; //checked 1
+                string uri = App.CACHE + App.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + fifaCodeHome + ".json"; //checked 1
                 if (File.Exists(uri))
                 {
                     bigdata = await Fetch.FetchJsonFromFileAsync<List<Match>>(uri);
                 }
                 else
                 {
-                    bigdata = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), App.fifaCodeHome));
+                    bigdata = await Fetch.FetchJsonFromUrlAsync<List<Match>>(URL.MatchesFiltered(App.userSettings.GenderedRepresentationUrl(), fifaCodeHome));
                     File.WriteAllText(uri, JsonConvert.SerializeObject(bigdata));
                 }
 
+                string fifaCodeGuest = null;
+                if (App.userSettings.SavedLeague == UserSettings.League.Female)
+                    fifaCodeGuest = App.fifaCodeGuestFemale;
+                else
+                    fifaCodeGuest = App.fifaCodeGuestMale;
+
                 match = bigdata.Find(x =>
-                    (x.HomeTeam.Code == App.fifaCodeHome && x.AwayTeam.Code == App.fifaCodeGuest) ||
-                    (x.HomeTeam.Code == App.fifaCodeGuest && x.AwayTeam.Code == App.fifaCodeHome)
+                    (x.HomeTeam.Code == fifaCodeHome && x.AwayTeam.Code == fifaCodeGuest) ||
+                    (x.HomeTeam.Code == fifaCodeGuest && x.AwayTeam.Code == fifaCodeHome)
                 );
 
                 match.AwayTeamStatistics.StartingEleven.ForEach(playersGuest.Add);
                 match.HomeTeamStatistics.StartingEleven.ForEach(playersHome.Add);
 
-                string pathHome = App.userSettings.GenderedRepresentationFilePath() + App.fifaCodeHome + ".json";
+                string pathHome = App.userSettings.GenderedRepresentationFilePath() + fifaCodeHome + ".json";
                 if (File.Exists(pathHome))
                 {
                     playersHome = await Fetch.FetchJsonFromFileAsync<List<Player>>(pathHome);
                 }
-                string pathGuest = App.userSettings.GenderedRepresentationFilePath() + App.fifaCodeGuest + ".json";
+                string pathGuest = App.userSettings.GenderedRepresentationFilePath() + fifaCodeGuest + ".json";
                 if (File.Exists(pathGuest))
                 {
                     playersGuest = await Fetch.FetchJsonFromFileAsync<List<Player>>(pathGuest);
