@@ -1,0 +1,27 @@
+﻿<Window x:Class="WPFInterface.UserData"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WPFInterface"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="UserData" Height="250" Width="250">
+    <Grid
+        x:Name="gridMaster"
+        >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <StackPanel Grid.Column="0" x:Name="gridColumnImage" />
+        <StackPanel Grid.Column="1"  VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Name="lbName"/>
+            <Label Name="lbNumber"/>
+            <Label Name="lbPosition"/>
+            <Label Name="lbCaptain"/>
+            <Label Name="lbGoals"/>
+            <Label Name="lbYellowCards"/>
+        </StackPanel>
+    </Grid>
+</Window>
