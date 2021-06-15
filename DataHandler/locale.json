@@ -202,5 +202,13 @@
   "GuestRepresentation": {
     "hr": "Gostinska Reprezentacija",
     "en": "Guest Representation"
+  },
+  "Confirm": {
+    "hr": "Jeste li sigurni?",
+    "en": "Are you sure?"
+  },
+  "ConfirmTitle": {
+    "hr": "Potvrda unosa",
+    "en": "Confirmation"
   }
 }
