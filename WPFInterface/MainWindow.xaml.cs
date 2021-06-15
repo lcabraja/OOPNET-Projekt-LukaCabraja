@@ -215,6 +215,7 @@ namespace WPFInterface
             {
                 var animation = new DoubleAnimation
                 {
+                    From = 0,
                     To = 360,
                     Duration = TimeSpan.FromMilliseconds(300d)
                 };
