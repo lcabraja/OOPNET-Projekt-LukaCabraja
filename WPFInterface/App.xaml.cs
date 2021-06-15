@@ -204,7 +204,7 @@ namespace WPFInterface
                     fifaCodeHomeMale = teamCodes.HomeTeamCodeMale;
                 }
             }
-            catch(FileNotFoundException ex)
+            catch(FileNotFoundException)
             {
                 return;
             }
