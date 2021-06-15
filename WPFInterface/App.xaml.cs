@@ -43,8 +43,8 @@ namespace WPFInterface
         {
             PreparePaths();
             PrepareLocale();
-            TrySetup();
             isUserOnboarded = userOnboarded(); ;
+            TrySetup();
 
             Startup startup = new Startup();
             startup.ShowDialog();
@@ -57,9 +57,9 @@ namespace WPFInterface
 
             static void TrySetup()
             {
+                TryCodes();
                 TryFifa_code();
                 TryScreenSize();
-                TryCodes();
             }
         }
         internal static void UpdateUserSettings()
@@ -122,6 +122,21 @@ namespace WPFInterface
             try
             {
                 lastTeam = Fetch.FetchJsonFromFile<TeamResult>(REPRESENTATION);
+                if (userSettings != null)
+                {
+                    if (userSettings.SavedLeague == UserSettings.League.Female)
+                    {
+                        if (fifaCodeHomeFemale != lastTeam.FifaCode)
+                            fifaCodeGuestFemale = null;
+                        fifaCodeHomeFemale = lastTeam.FifaCode;
+                    }
+                    else
+                    {
+                        if (fifaCodeHomeMale != lastTeam.FifaCode)
+                            fifaCodeGuestMale = null;
+                        fifaCodeHomeMale = lastTeam.FifaCode;
+                    }
+                }
             }
             catch
             {
@@ -181,14 +196,21 @@ namespace WPFInterface
             try
             {
                 var teamCodes = Fetch.FetchJsonFromFile<TeamCodes>(CODES);
-                fifaCodeGuestFemale = teamCodes.GuestTeamCodeFemale;
-                fifaCodeHomeFemale = teamCodes.HomeTeamCodeFemale;
-                fifaCodeGuestMale = teamCodes.GuestTeamCodeMale;
-                fifaCodeHomeMale = teamCodes.HomeTeamCodeMale;
+                if (teamCodes != null)
+                {
+                    fifaCodeGuestFemale = teamCodes.GuestTeamCodeFemale;
+                    fifaCodeHomeFemale = teamCodes.HomeTeamCodeFemale;
+                    fifaCodeGuestMale = teamCodes.GuestTeamCodeMale;
+                    fifaCodeHomeMale = teamCodes.HomeTeamCodeMale;
+                }
             }
-            catch
+            catch(FileNotFoundException ex)
             {
-                fifaCodeHomeFemale = fifaCodeGuestFemale = fifaCodeHomeMale = fifaCodeGuestMale = null;
+                return;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
     }
