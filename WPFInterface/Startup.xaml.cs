@@ -37,9 +37,13 @@ namespace WPFInterface
         private bool isGuestPicked = false;
         private int cachedScreensize;
         private bool isScreenPicked = false;
+        private bool isSettings = false;
+        private bool isSwitch = true;
+        private bool isSwitchGuest = true;
         // ===================================================================================== Constructor & Loaded
-        public Startup()
+        public Startup(bool isSettings = false)
         {
+            this.isSettings = isSettings;
             InitializeComponent();
             Loaded += Startup_Loaded;
             Closing += Startup_Closing;
@@ -155,15 +159,38 @@ namespace WPFInterface
                 }
                 isRepresentationPicked = true;
                 AdvanceLevel(0);
+                isSwitch = true;
                 FillHomeComboBox();
             }
         }
         // ===================================================================================== ComboBox Handlers
-        private async void CbRepresentation_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CbRepresentation_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateGuestReps();
+        }
+
+        private async void UpdateGuestReps()
         {
             var fifaCodeHome = DetermineSelectedFifaCode(cbRepresentation);
+            if (cachedRepresentation == UserSettings.League.Female)
+            {
+                if (isSwitch)
+                    fifaCodeHome = teamCodeHomeFemale ?? App.fifaCodeHomeFemale ?? fifaCodeHome;
+                teamCodeHomeFemale = fifaCodeHome;
+            }
+            else
+            {
+                if (isSwitch)
+                    fifaCodeHome = teamCodeHomeMale ?? App.fifaCodeHomeMale ?? fifaCodeHome;
+                teamCodeHomeMale = fifaCodeHome;
+            }
+            isSwitch = false;
             if (fifaCodeHome == null)
+            {
+                isHomePicked = false;
+                cbRepresentationGuest.SelectedItem = null;
                 return;
+            }
             lbLoadingRepresentation.Content = App.LocalizedString("Fetching");
             List<Match> matches = await GetMatches(fifaCodeHome);
             if (matches == null)
@@ -182,9 +209,18 @@ namespace WPFInterface
             cbRepresentationGuest.ItemsSource = otherReps;
             string fifaCodeGuest = null;
             if (cachedRepresentation == UserSettings.League.Female)
-                teamCodeGuestFemale = fifaCodeGuest = App.fifaCodeGuestFemale;
+            {
+                if (isSwitchGuest)
+                    fifaCodeGuest = teamCodeGuestFemale ?? App.fifaCodeGuestFemale ?? fifaCodeGuest;
+                teamCodeGuestFemale = fifaCodeGuest;
+            }
             else
-                teamCodeGuestMale = fifaCodeGuest = App.fifaCodeGuestMale;
+            {
+                if (isSwitchGuest)
+                    fifaCodeGuest = teamCodeGuestMale ?? App.fifaCodeGuestMale ?? fifaCodeGuest;
+                teamCodeGuestMale = fifaCodeGuest;
+            }
+            isSwitchGuest = false;
             if (fifaCodeGuest != null)
             {
                 ItemCollection items = cbRepresentationGuest.Items;
@@ -198,13 +234,59 @@ namespace WPFInterface
                     }
                 }
             }
+            await SetMatchResults();
             AdvanceLevel(1);
             isHomePicked = true;
         }
+
         private async void CbRepresentationGuest_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            await SetMatchResults();
+            isSwitchGuest = false;
+        }
+
+        private async Task SetMatchResults()
         {
             string fifaCodeHome = DetermineSelectedFifaCode(cbRepresentation);
             string fifaCodeGuest = DetermineSelectedFifaCode(cbRepresentationGuest);
+            if (cachedRepresentation == UserSettings.League.Female)
+            {
+                if (isSwitchGuest)
+                    fifaCodeHome = teamCodeHomeFemale ?? App.fifaCodeHomeFemale ?? fifaCodeHome;
+                teamCodeHomeFemale = fifaCodeHome;
+            }
+            else
+            {
+                if (isSwitchGuest)
+                    fifaCodeHome = teamCodeHomeMale ?? App.fifaCodeHomeMale ?? fifaCodeHome;
+                teamCodeHomeMale = fifaCodeHome;
+            }
+            if (cachedRepresentation == UserSettings.League.Female)
+            {
+                if (isSwitchGuest)
+                    fifaCodeGuest = teamCodeGuestFemale ?? App.fifaCodeGuestFemale ?? fifaCodeGuest;
+                teamCodeGuestFemale = fifaCodeGuest;
+            }
+            else
+            {
+                if (isSwitchGuest)
+                    fifaCodeGuest = teamCodeGuestMale ?? App.fifaCodeGuestMale ?? fifaCodeGuest;
+                teamCodeGuestMale = fifaCodeGuest;
+            }
+            if (fifaCodeHome == null)
+            {
+                lbLoadingRepresentation.Content = null;
+                isHomePicked = false;
+                AdvanceLevel(1);
+                return;
+            }
+            if (fifaCodeGuest == null)
+            {
+                lbLoadingRepresentationGuest.Content = null;
+                isGuestPicked = false;
+                AdvanceLevel(1);
+                return;
+            }
             lbLoadingRepresentationGuest.Content = App.LocalizedString("Fetching");
             List<Match> matches = await GetMatches(fifaCodeHome);
             if (matches == null)
@@ -216,20 +298,37 @@ namespace WPFInterface
             Match match1 = matches.Where(x => x.HomeTeam.Code == fifaCodeHome && x.AwayTeam.Code == fifaCodeGuest).FirstOrDefault();
             Match match2 = matches.Where(x => x.HomeTeam.Code == fifaCodeGuest && x.AwayTeam.Code == fifaCodeHome).FirstOrDefault();
             Match match = match1 ?? match2;
+            if (match == null)
+            {
+                lbLoadingRepresentationGuest.Content = App.LocalizedString("error");
+                return;
+            }
             lbLoadingRepresentationGuest.Content = $"{match.HomeTeam.Code} {match.HomeTeam.Goals} : {match.AwayTeam.Code} {match.AwayTeam.Goals}";
-            AdvanceLevel(1);
             isGuestPicked = true;
+            AdvanceLevel(1);
         }
+
         // ===================================================================================== Lower Half
         private async void FillHomeComboBox()
         {
+            cbRepresentation.SelectionChanged -= CbRepresentation_SelectionChanged;
             List<TeamResult> representations = (await GetRepresentations()).OrderBy(x => x.FifaCode).ToList();
             cbRepresentation.ItemsSource = representations.Select(x => $"{x.Country} ({x.FifaCode})").ToList();
             string fifaCodeHome = null;
             if (cachedRepresentation == UserSettings.League.Female)
-                teamCodeHomeFemale = fifaCodeHome = App.fifaCodeHomeFemale;
+            {
+                if (isSwitch)
+                    fifaCodeHome = teamCodeHomeFemale ?? App.fifaCodeHomeFemale ?? fifaCodeHome;
+                teamCodeHomeFemale = fifaCodeHome;
+            }
             else
-                teamCodeHomeMale = fifaCodeHome = App.fifaCodeGuestMale;
+            {
+                if (isSwitch)
+                    fifaCodeHome = teamCodeHomeMale ?? App.fifaCodeHomeMale ?? fifaCodeHome;
+                teamCodeHomeMale = fifaCodeHome;
+            }
+            isSwitch = false;
+            cbRepresentation.SelectionChanged += CbRepresentation_SelectionChanged;
             if (fifaCodeHome != null)
             {
                 ItemCollection items = cbRepresentation.Items;
@@ -242,6 +341,10 @@ namespace WPFInterface
                         break;
                     }
                 }
+            }
+            else
+            {
+                cbRepresentation.SelectedItem = null;
             }
         }
         // ===================================================================================== Radio Screen Size
@@ -322,8 +425,7 @@ namespace WPFInterface
         {
             List<TeamResult> representations = null;
             string baseUrl = GetGenderedCachedRepresentation();
-            string uri = App.CACHE + baseUrl.Substring(7).Replace('\\', '-').Replace('/', '-') + "TeamResult" + ".json";
-
+            string uri = App.CACHE + baseUrl.Substring(7).Replace('\\', '-').Replace('/', '-') + "@TeamResult" + ".json";
             try
             {
                 if (File.Exists(uri))
@@ -338,7 +440,7 @@ namespace WPFInterface
             }
             catch (HttpStatusException ex)
             {
-                MessageBox.Show(App.LocalizedString("tooManyRequestsMessage"), App.LocalizedString("tooManyRequests"));
+                MessageBox.Show(App.LocalizedString("tooManyRequests"), App.LocalizedString("tooManyRequestsMessage"));
             }
             catch (Exception ex)
             {
@@ -374,6 +476,10 @@ namespace WPFInterface
                 {
                     btContinue.IsEnabled = true;
                 }
+                else
+                {
+                    btContinue.IsEnabled = false;
+                }
             }
         }
         // ===================================================================================== Locals
@@ -396,27 +502,29 @@ namespace WPFInterface
             this.btContinue.Content = App.LocalizedString("Continue", cachedLanguage);
         }
         // ===================================================================================== Finish and save
-        private void finishOnboarding()
+        private async void finishOnboarding()
         {
+            var lastTeam = (await GetRepresentations()).Find(x => x.FifaCode == (cachedRepresentation == UserSettings.League.Female ? teamCodeHomeFemale : teamCodeHomeMale));
             UserSettings user = new UserSettings { SavedLanguage = cachedLanguage, SavedLeague = cachedRepresentation };
             ScreenSize size = new ScreenSize { ChosenSize = cachedScreensize };
-            string homeTeamCode = DetermineSelectedFifaCode(cbRepresentation);
-            string guestTeamCode = DetermineSelectedFifaCode(cbRepresentationGuest);
-            App.UpdateUserSettings(user);
             App.UpdateUserSize(size);
             try
             {
-                File.WriteAllText(App.REPRESENTATION, GetRepresentations().ToString());
+
+                File.WriteAllText(App.USER, new UserSettings { SavedLanguage = cachedLanguage, SavedLeague = cachedRepresentation }.ToString());
+                App.UpdateUserSettings(user);
+                File.WriteAllText(App.REPRESENTATION, lastTeam.ToString());
                 App.TryFifa_code();
                 File.WriteAllText(App.SIZE, size.ToString());
                 App.TryScreenSize();
                 File.WriteAllText(
                     App.CODES,
-                    new TeamCodes { 
-                        HomeTeamCodeFemale = teamCodeHomeFemale, 
-                        HomeTeamCodeMale = teamCodeHomeMale, 
-                        GuestTeamCodeFemale = teamCodeGuestFemale, 
-                        GuestTeamCodeMale = teamCodeGuestMale 
+                    new TeamCodes
+                    {
+                        HomeTeamCodeFemale = teamCodeHomeFemale,
+                        HomeTeamCodeMale = teamCodeHomeMale,
+                        GuestTeamCodeFemale = teamCodeGuestFemale,
+                        GuestTeamCodeMale = teamCodeGuestMale
                     }.ToString());
                 App.TryCodes();
                 keepAlive = true;
@@ -453,7 +561,22 @@ namespace WPFInterface
         {
             if (isLanguagePicked && isRepresentationPicked && isHomePicked && isGuestPicked && isScreenPicked)
             {
-                finishOnboarding();
+                if (isSettings)
+                {
+                    Confirm confirm = new Confirm();
+                    confirm.btOK.Click += BtOK_Click;
+                    confirm.ShowDialog();
+
+                    void BtOK_Click(object sender, RoutedEventArgs e)
+                    {
+                        finishOnboarding();
+                        confirm.Close();
+                    }
+                }
+                else
+                {
+                    finishOnboarding();
+                }
             }
         }
         // ===================================================================================== Close app on premature setup end
