@@ -29,7 +29,8 @@ namespace WinFormsInterface
             {
                 List<TeamResult> representations = null;
                 lbTooltip.Text = Program.LocalizedString("Fetching");
-                string uri = Program.CACHE + Program.userSettings.GenderedRepresentationUrl().Substring(7).Replace('\\', '-').Replace('/', '-') + "TeamResult" + ".json"; // checked 1
+                string baseUrl = Program.userSettings.SavedLeague == UserSettings.League.Female ? URL.F_BASE_URL : URL.M_BASE_URL;
+                string uri = Program.CACHE + baseUrl.Substring(7).Replace('\\', '-').Replace('/', '-') + "@TeamResult" + ".json"; // checked 1
                 if (File.Exists(uri))
                 {
                     representations = await Fetch.FetchJsonFromFileAsync<List<TeamResult>>(uri);
