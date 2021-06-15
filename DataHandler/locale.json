@@ -203,6 +203,42 @@
     "hr": "Gostinska Reprezentacija",
     "en": "Guest Representation"
   },
+  "Naziv": {
+    "hr": "Naziv",
+    "en": "Name"
+  },
+  "Fifakod": {
+    "hr": "Fifa kod",
+    "en": "Fifa code"
+  },
+  "GamesPlayed": {
+    "hr": "Odigrano",
+    "en": "Games played"
+  },
+  "GamesWon": {
+    "hr": "Pobijedjeno",
+    "en": "Games won"
+  },
+  "GamesLost": {
+    "hr": "Izgubljeno",
+    "en": "Games lost"
+  },
+  "GamedTied": {
+    "hr": "Izjednaceno",
+    "en": "Games tied"
+  },
+  "GoalsScored": {
+    "hr": "Golova zabijeno",
+    "en": "Goals scored"
+  },
+  "GoalsTaken": {
+    "hr": "Golova primljeno",
+    "en": "Goals taken"
+  },
+  "GoalsDiff": {
+    "hr": "Razlika",
+    "en": "Differential"
+  },
   "Confirm": {
     "hr": "Jeste li sigurni?",
     "en": "Are you sure?"
@@ -210,5 +246,17 @@
   "ConfirmTitle": {
     "hr": "Potvrda unosa",
     "en": "Confirmation"
+  },
+  "okButton": {
+    "hr": "Da",
+    "en": "Yes"
+  },
+  "CancelButton": {
+    "hr": "Ne",
+    "en": "No"
+  },
+  "RepOverview": {
+    "hr": "Pregled reprezetacije",
+    "en": "Representation overview"
   }
 }
